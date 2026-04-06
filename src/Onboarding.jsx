@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "./AuthContext";
-import { signInWithGoogle, signUpWithEmail, signInWithEmail, getAdditionalUserInfo } from "./firebase";
+import { signInWithGoogle, signUpWithEmail, signInWithEmail, resetPassword, getAdditionalUserInfo } from "./firebase";
 
 /* ═══ ICONS ═══ */
 const S = (p) => (
@@ -79,6 +80,7 @@ const pwRules = [
 const passwordValid = (pw) => pwRules.every((r) => r.test(pw));
 
 export default function Onboarding() {
+  const { t, i18n } = useTranslation();
   const { user, authStep, onboardingDone, markNewUser, completeOnboarding, saveOnboardingProgress, onboardingData } = useAuth();
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
 
@@ -89,6 +91,7 @@ export default function Onboarding() {
   const [showPw, setShowPw] = useState(false);
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   // Onboarding state — step 0-6
   const [obStep, setObStep] = useState(0);
@@ -219,6 +222,18 @@ export default function Onboarding() {
     setBusy(false);
   };
 
+  const handleForgotPassword = async () => {
+    if (!email.trim()) { setErr(t("onboarding.enterEmailFirst")); return; }
+    setBusy(true); setErr("");
+    try {
+      await resetPassword(email);
+      setResetSent(true);
+    } catch (e) {
+      setErr(authError(e.code));
+    }
+    setBusy(false);
+  };
+
   /* ═══ COMMON STYLES ═══ */
   const inputStyle = {
     width:"100%", padding:"12px 16px", borderRadius:12,
@@ -307,13 +322,13 @@ export default function Onboarding() {
           cursor:"pointer", transition:"all 0.2s",
           background:!isSignUp?C.pri:"transparent", color:!isSignUp?"white":C.tx3,
           fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif",
-        }}>Iniciar sesión</button>
-        <button onClick={()=>{setIsSignUp(true);setErr("");}} style={{
+        }}>{t("onboarding.signIn")}</button>
+        <button onClick={()=>{setIsSignUp(true);setErr("");setResetSent(false)}} style={{
           flex:1, padding:"10px 0", border:"none", fontSize:13, fontWeight:700,
           cursor:"pointer", transition:"all 0.2s",
           background:isSignUp?C.pri:"transparent", color:isSignUp?"white":C.tx3,
           fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif",
-        }}>Crear cuenta</button>
+        }}>{t("onboarding.createAccount")}</button>
       </div>
 
       {/* Form */}
@@ -329,7 +344,7 @@ export default function Onboarding() {
           <I.Lock z={16} style={{ position:"absolute", left:14, top:14, color:C.tx3 }}/>
           <input type={showPw?"text":"password"} value={password}
             onChange={(e)=>setPassword(e.target.value)}
-            placeholder={isSignUp?"Crea una contraseña segura":"Contraseña"}
+            placeholder={isSignUp?t("onboarding.createPassword"):t("onboarding.password")}
             style={{...inputStyle, paddingLeft:40, paddingRight:44}}
             onKeyDown={(e)=>e.key==="Enter"&&handleEmailAuth()}
             onFocus={(e)=>(e.target.style.borderColor=C.pri)}
@@ -360,8 +375,21 @@ export default function Onboarding() {
         )}
 
         <button onClick={handleEmailAuth} style={{...primaryBtn, opacity:(busy||(isSignUp&&!passwordValid(password)&&password.length>0))?0.6:1, pointerEvents:(busy)?"none":"auto"}}>
-          {busy?"Verificando...":isSignUp?"Crear cuenta":"Iniciar sesión"}
+          {busy?t("onboarding.verifying"):isSignUp?t("onboarding.createAccount"):t("onboarding.signIn")}
         </button>
+
+        {/* Forgot Password */}
+        {!isSignUp && (
+          resetSent ? (
+            <div style={{ padding:"10px 14px", borderRadius:10, background:C.sucL, border:`1px solid ${C.sucS}`, fontSize:12, color:C.suc, fontWeight:600, textAlign:"center" }}>
+              {t("onboarding.resetSent")}
+            </div>
+          ) : (
+            <button onClick={handleForgotPassword} style={{ background:"none", border:"none", cursor:"pointer", fontSize:12, fontWeight:600, color:C.pri, textAlign:"center", width:"100%", padding:"4px 0", fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif" }}>
+              {t("onboarding.forgotPassword")}
+            </button>
+          )
+        )}
 
         {/* Divider */}
         <div style={{ display:"flex", alignItems:"center", gap:12 }}>
@@ -378,7 +406,7 @@ export default function Onboarding() {
           fontSize:14, fontWeight:600, color:C.tx, transition:"all 0.2s",
           fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif",
         }}>
-          <GoogleIcon/> Continuar con Google
+          <GoogleIcon/> {t("onboarding.continueGoogle")}
         </button>
       </div>
 
@@ -388,10 +416,24 @@ export default function Onboarding() {
         border:`1px solid ${C.danS}`, fontSize:12, color:C.dan, fontWeight:600,
       }}>{err}</div>}
 
+      {/* Language Toggle */}
+      <div style={{ display:"flex", justifyContent:"center", gap:6 }}>
+        {[{code:"es",label:"Español"},{code:"en",label:"English"}].map(lng=>(
+          <button key={lng.code} onClick={()=>{i18n.changeLanguage(lng.code);setErr("");setResetSent(false)}} style={{
+            padding:"6px 16px", borderRadius:10, fontSize:12, fontWeight:i18n.language?.startsWith(lng.code)?700:500,
+            cursor:"pointer", transition:"all 0.2s",
+            background:i18n.language?.startsWith(lng.code)?C.pri:"transparent",
+            color:i18n.language?.startsWith(lng.code)?"white":C.tx3,
+            border:`1px solid ${i18n.language?.startsWith(lng.code)?C.pri:C.brd}`,
+            fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif",
+          }}>{lng.label}</button>
+        ))}
+      </div>
+
       {/* Footer */}
       <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:5, marginTop:4 }}>
         <I.Lock z={11} style={{ color:C.suc, opacity:0.6 }}/>
-        <span style={{ fontSize:10.5, color:C.tx3, fontWeight:500 }}>Datos cifrados E2E · GDPR · HIPAA</span>
+        <span style={{ fontSize:10.5, color:C.tx3, fontWeight:500 }}>{t("onboarding.securityFooter")}</span>
       </div>
     </div>
   );

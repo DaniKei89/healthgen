@@ -5,6 +5,7 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
   getAdditionalUserInfo,
@@ -37,6 +38,9 @@ export const signUpWithEmail = (email, password) =>
 // Email Sign-In
 export const signInWithEmail = (email, password) =>
   signInWithEmailAndPassword(auth, email, password);
+
+// Password Reset
+export const resetPassword = (email) => sendPasswordResetEmail(auth, email);
 
 // Logout
 export const logOut = () => signOut(auth);
