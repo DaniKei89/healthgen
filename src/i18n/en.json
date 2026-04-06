@@ -184,14 +184,12 @@
     "uploadError": "Upload error: {{message}}"
   },
   "onboarding": {
-    "welcome": "Your digital health, protected with the best technology",
     "signIn": "Sign in",
     "createAccount": "Create account",
     "email": "your@email.com",
     "password": "Password",
     "createPassword": "Create a secure password",
     "continueGoogle": "Continue with Google",
-    "protected": "Your health, protected",
     "verifying": "Verifying...",
     "forgotPassword": "Forgot your password?",
     "resetSent": "✓ Recovery email sent. Check your inbox.",
@@ -209,13 +207,105 @@
       "number": "1 number",
       "special": "1 special character (!@#$...)"
     },
-    "steps": {
-      "personalData": "Personal data",
-      "healthStatus": "Health status",
+    "errors": {
+      "emailInUse": "This email is already registered. Sign in instead.",
+      "weakPassword": "Password is too weak",
+      "invalidEmail": "Invalid email address",
+      "tooManyRequests": "Too many attempts. Please wait a moment.",
+      "invalidCredential": "Incorrect email or password",
+      "userNotFound": "No account exists with this email",
+      "wrongPassword": "Incorrect password",
+      "generic": "An error occurred. Please try again.",
+      "enterEmailPassword": "Enter email and password",
+      "passwordRequirements": "Password doesn't meet all requirements"
+    },
+    "welcome": {
+      "helloUser": "Hello, {{name}}!",
+      "helloDefault": "Welcome!",
+      "subtitle1": "Let's personalize your health experience in <b>less than 2 minutes</b>.",
+      "subtitle2": "The more we know, the better recommendations you'll receive.",
+      "badge1": "100% private",
+      "badge2": "~2 min",
+      "badge3": "Editable later",
+      "startButton": "Start personalization"
+    },
+    "step1": {
+      "title": "Personal data",
+      "subtitle": "Basic information for your profile",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "dob": "Date of birth",
+      "sex": "Biological sex",
+      "selectSex": "Select",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "preferNotSay": "Prefer not to say",
+      "country": "Country of residence",
+      "selectCountry": "Select country",
+      "height": "Height (cm)",
+      "weight": "Weight (kg)"
+    },
+    "step2": {
+      "title": "Health status",
+      "subtitle": "Basic information to personalize",
+      "allergiesQuestion": "Do you have any known allergies?",
+      "medsQuestion": "Do you take regular medication?",
+      "conditionsQuestion": "Do you have any diagnosed conditions?",
+      "bloodType": "Blood type",
+      "dontKnow": "Don't know",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "step3": {
+      "title": "Family history",
+      "subtitle": "Any of these conditions in your family?",
+      "confidential": "This information is <b style='color:#4F6AE8'>strictly confidential</b>"
+    },
+    "step4": {
+      "title": "Integrations",
+      "subtitle": "Connect your devices for real-time data",
+      "connectButton": "Connect {{count}} device(s)",
+      "skipButton": "Continue without connecting"
+    },
+    "step5": {
+      "title": "Permissions",
+      "subtitle": "With all permissions active, our AI offers you the best personalized experience",
+      "recommended": "Recommended: all active",
+      "recommendedDesc": "By enabling all permissions, the app and AI can offer you precise recommendations, smart alerts, and complete health tracking.",
+      "healthData": "Health data",
+      "healthDataDesc": "Store and analyze your metrics",
+      "notifications": "Notifications",
+      "notificationsDesc": "Personalized reminders and alerts",
+      "camera": "Camera",
+      "cameraDesc": "Scan documents and medications",
+      "files": "Files",
+      "filesDesc": "Upload reports and medical documents",
+      "secureNote1": "Secure environment <b style='color:#30A46C'>controlled by you</b>. Your data is never shared with third parties.",
+      "secureNote2": "You can <b style='color:#30A46C'>change these permissions</b> anytime from your profile."
+    },
+    "step6": {
+      "title": "Profile ready!",
+      "subtitle": "Your experience has been personalized",
+      "name": "Name",
+      "dob": "Date of birth",
+      "sex": "Sex",
+      "country": "Country",
+      "height": "Height",
+      "weight": "Weight",
+      "bloodType": "Blood type",
       "familyHistory": "Family history",
+      "conditions": "conditions",
       "integrations": "Integrations",
-      "permissions": "Permissions",
-      "complete": "Complete"
-    }
+      "connected": "connected",
+      "nextSteps": "Next steps",
+      "nextStep1": "Explore your personalized dashboard",
+      "nextStep2": "Record your first health metric",
+      "nextStep3": "Review your weekly wellness plan",
+      "enterApp": "Enter Ledora AI"
+    },
+    "continue": "Continue",
+    "back": "Back",
+    "stepOf": "Step {{current}} of {{total}}"
   }
 }

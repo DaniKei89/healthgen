@@ -115,10 +115,10 @@ const AutocompleteInput = ({ options, selected, onSelect, onRemove, placeholder,
 
 /* ═══ PASSWORD VALIDATION ═══ */
 const pwRules = [
-  { id:"len", label:"Mínimo 12 caracteres", test: (pw) => pw.length >= 12 },
-  { id:"upper", label:"1 letra mayúscula", test: (pw) => /[A-Z]/.test(pw) },
-  { id:"num", label:"1 número", test: (pw) => /[0-9]/.test(pw) },
-  { id:"spec", label:"1 carácter especial (!@#$...)", test: (pw) => /[^A-Za-z0-9]/.test(pw) },
+  { id:"len", labelKey:"onboarding.pwRules.length", test: (pw) => pw.length >= 12 },
+  { id:"upper", labelKey:"onboarding.pwRules.upper", test: (pw) => /[A-Z]/.test(pw) },
+  { id:"num", labelKey:"onboarding.pwRules.number", test: (pw) => /[0-9]/.test(pw) },
+  { id:"spec", labelKey:"onboarding.pwRules.special", test: (pw) => /[^A-Za-z0-9]/.test(pw) },
 ];
 const passwordValid = (pw) => pwRules.every((r) => r.test(pw));
 
@@ -227,20 +227,20 @@ export default function Onboarding() {
   /* ═══ AUTH HANDLERS ═══ */
   const authError = (code) => {
     const map = {
-      "auth/email-already-in-use": "Este email ya está registrado. Inicia sesión.",
-      "auth/weak-password": "La contraseña es demasiado débil",
-      "auth/invalid-email": "Email no válido",
-      "auth/too-many-requests": "Demasiados intentos. Espera un momento.",
-      "auth/invalid-credential": "Email o contraseña incorrectos",
-      "auth/user-not-found": "No existe una cuenta con ese email",
-      "auth/wrong-password": "Contraseña incorrecta",
+      "auth/email-already-in-use": t("onboarding.errors.emailInUse"),
+      "auth/weak-password": t("onboarding.errors.weakPassword"),
+      "auth/invalid-email": t("onboarding.errors.invalidEmail"),
+      "auth/too-many-requests": t("onboarding.errors.tooManyRequests"),
+      "auth/invalid-credential": t("onboarding.errors.invalidCredential"),
+      "auth/user-not-found": t("onboarding.errors.userNotFound"),
+      "auth/wrong-password": t("onboarding.errors.wrongPassword"),
     };
-    return map[code] || "Ha ocurrido un error. Inténtalo de nuevo.";
+    return map[code] || t("onboarding.errors.generic");
   };
 
   const handleEmailAuth = async () => {
-    if (!email.trim() || !password.trim()) { setErr("Introduce email y contraseña"); return; }
-    if (isSignUp && !passwordValid(password)) { setErr("La contraseña no cumple todos los requisitos"); return; }
+    if (!email.trim() || !password.trim()) { setErr(t("onboarding.errors.enterEmailPassword")); return; }
+    if (isSignUp && !passwordValid(password)) { setErr(t("onboarding.errors.passwordRequirements")); return; }
     setErr(""); setBusy(true);
     try {
       localStorage.setItem("ledora_auth_v2", "true");
@@ -329,7 +329,7 @@ export default function Onboarding() {
   const OnboardingProgress = () => (
     <div style={{ marginBottom:20 }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
-        <span style={{ fontSize:11, fontWeight:700, color:C.tx3 }}>Paso {obStep + 1} de {totalSteps}</span>
+        <span style={{ fontSize:11, fontWeight:700, color:C.tx3 }}>{t("onboarding.stepOf", {current: obStep + 1, total: totalSteps})}</span>
         <span style={{ fontSize:11, fontWeight:700, color:C.pri }}>{Math.round(progressPct)}%</span>
       </div>
       <div style={{ height:4, borderRadius:4, background:C.bg2, overflow:"hidden" }}>
@@ -340,7 +340,7 @@ export default function Onboarding() {
 
   const BackBtn = () => obStep > 0 ? (
     <button onClick={prevOb} style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:4, color:C.tx3, fontSize:13, fontWeight:600, marginBottom:8, fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif" }}>
-      <I.Chv z={16}/> Atrás
+      <I.Chv z={16}/> {t("onboarding.back")}
     </button>
   ) : null;
 
@@ -413,7 +413,7 @@ export default function Onboarding() {
                     width:16, height:16, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center",
                     background:ok?C.sucL:C.bg2, border:`1.5px solid ${ok?C.suc:C.brd}`, transition:"all 0.2s",
                   }}>{ok && <I.Ok z={9} sk={C.suc} sw={3}/>}</div>
-                  <span style={{ fontSize:11, color:ok?C.suc:C.tx3, fontWeight:ok?600:400 }}>{r.label}</span>
+                  <span style={{ fontSize:11, color:ok?C.suc:C.tx3, fontWeight:ok?600:400 }}>{t(r.labelKey)}</span>
                 </div>
               );
             })}
@@ -494,14 +494,11 @@ export default function Onboarding() {
         boxShadow:`0 12px 32px ${C.pri}30`,
       }}><I.Sparkle z={40} sk="white" sw={1.8}/></div>
       <h1 style={{ fontSize:26, fontWeight:900, color:C.tx }}>
-        {user?.displayName ? `¡Hola, ${user.displayName.split(" ")[0]}!` : "¡Bienvenido!"}
+        {user?.displayName ? t("onboarding.welcome.helloUser", {name: user.displayName.split(" ")[0]}) : t("onboarding.welcome.helloDefault")}
       </h1>
-      <p style={{ fontSize:14, color:C.tx2, lineHeight:1.6, maxWidth:320, margin:"0 auto" }}>
-        Vamos a personalizar tu experiencia de salud en <b>menos de 2 minutos</b>.
-        Cuanto más sepamos, mejores recomendaciones recibirás.
-      </p>
+      <p style={{ fontSize:14, color:C.tx2, lineHeight:1.6, maxWidth:320, margin:"0 auto" }} dangerouslySetInnerHTML={{__html: t("onboarding.welcome.subtitle1") + " " + t("onboarding.welcome.subtitle2")}} />
       <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap", marginTop:4 }}>
-        {[{icon:"🔒",t:"100% privado"},{icon:"⚡",t:"~2 min"},{icon:"✏️",t:"Editable después"}].map((b)=>(
+        {[{icon:"🔒",t:t("onboarding.welcome.badge1")},{icon:"⚡",t:t("onboarding.welcome.badge2")},{icon:"✏️",t:t("onboarding.welcome.badge3")}].map((b)=>(
           <span key={b.t} style={{
             padding:"6px 14px", borderRadius:20, fontSize:12, fontWeight:600,
             background:C.bg, border:`1px solid ${C.brd}`, color:C.tx2,
@@ -509,7 +506,7 @@ export default function Onboarding() {
         ))}
       </div>
       <button onClick={nextOb} style={{...primaryBtn, marginTop:8, opacity:1}}>
-        Comenzar personalización
+        {t("onboarding.welcome.startButton")}
       </button>
     </div>
   );
@@ -525,57 +522,57 @@ export default function Onboarding() {
           background:`linear-gradient(135deg,${C.pri}15,${C.pur}15)`,
           display:"flex", alignItems:"center", justifyContent:"center",
         }}><I.User z={24} style={{color:C.pri}}/></div>
-        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>Datos personales</h2>
-        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>Información básica para tu perfil</p>
+        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>{t("onboarding.step1.title")}</h2>
+        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>{t("onboarding.step1.subtitle")}</p>
       </div>
       <div style={cardBox}>
         <div>
-          <label style={labelStyle}>Nombre</label>
-          <input value={firstName} onChange={(e)=>setFirstName(e.target.value)} placeholder="Tu nombre"
+          <label style={labelStyle}>{t("onboarding.step1.name")}</label>
+          <input value={firstName} onChange={(e)=>setFirstName(e.target.value)} placeholder={t("onboarding.step1.namePlaceholder")}
             style={inputStyle} onFocus={(e)=>(e.target.style.borderColor=C.pri)} onBlur={(e)=>(e.target.style.borderColor=C.brd)}/>
         </div>
         <div style={{ display:"flex", gap:10 }}>
           <div style={{ flex:1 }}>
-            <label style={labelStyle}>Fecha de nacimiento</label>
+            <label style={labelStyle}>{t("onboarding.step1.dob")}</label>
             <input type="date" value={dob} onChange={(e)=>setDob(e.target.value)}
               style={{...inputStyle, colorScheme:"light"}}
               onFocus={(e)=>(e.target.style.borderColor=C.pri)} onBlur={(e)=>(e.target.style.borderColor=C.brd)}/>
           </div>
           <div style={{ flex:1 }}>
-            <label style={labelStyle}>Sexo biológico</label>
+            <label style={labelStyle}>{t("onboarding.step1.sex")}</label>
             <select value={sex} onChange={(e)=>setSex(e.target.value)}
               style={{...inputStyle, appearance:"auto", cursor:"pointer"}}>
-              <option value="">Seleccionar</option>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-              <option value="O">Otro</option>
-              <option value="N">Prefiero no decir</option>
+              <option value="">{t("onboarding.step1.selectSex")}</option>
+              <option value="M">{t("onboarding.step1.male")}</option>
+              <option value="F">{t("onboarding.step1.female")}</option>
+              <option value="O">{t("onboarding.step1.other")}</option>
+              <option value="N">{t("onboarding.step1.preferNotSay")}</option>
             </select>
           </div>
         </div>
         <div>
-          <label style={labelStyle}>País de residencia</label>
+          <label style={labelStyle}>{t("onboarding.step1.country")}</label>
           <select value={country} onChange={(e)=>setCountry(e.target.value)}
             style={{...inputStyle, appearance:"auto", cursor:"pointer"}}>
-            <option value="">Seleccionar país</option>
+            <option value="">{t("onboarding.step1.selectCountry")}</option>
             {COUNTRIES.map((c)=><option key={c} value={c}>{c}</option>)}
           </select>
         </div>
         <div style={{ display:"flex", gap:10 }}>
           <div style={{ flex:1 }}>
-            <label style={labelStyle}>Altura (cm)</label>
+            <label style={labelStyle}>{t("onboarding.step1.height")}</label>
             <input type="number" value={height} onChange={(e)=>setHeight(e.target.value)} placeholder="170"
               style={inputStyle} onFocus={(e)=>(e.target.style.borderColor=C.pri)} onBlur={(e)=>(e.target.style.borderColor=C.brd)}/>
           </div>
           <div style={{ flex:1 }}>
-            <label style={labelStyle}>Peso (kg)</label>
+            <label style={labelStyle}>{t("onboarding.step1.weight")}</label>
             <input type="number" value={weight} onChange={(e)=>setWeight(e.target.value)} placeholder="70"
               style={inputStyle} onFocus={(e)=>(e.target.style.borderColor=C.pri)} onBlur={(e)=>(e.target.style.borderColor=C.brd)}/>
           </div>
         </div>
       </div>
       <button onClick={nextOb} style={{...primaryBtn, opacity:firstName.trim()?1:0.5}}>
-        Continuar
+        {t("onboarding.continue")}
       </button>
     </div>
   );
@@ -599,13 +596,13 @@ export default function Onboarding() {
           background:`linear-gradient(135deg,${C.pri}15,${C.pur}15)`,
           display:"flex", alignItems:"center", justifyContent:"center",
         }}><I.Activity z={24} style={{color:C.pri}}/></div>
-        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>Estado de salud</h2>
-        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>Información básica para personalizar</p>
+        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>{t("onboarding.step2.title")}</h2>
+        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>{t("onboarding.step2.subtitle")}</p>
       </div>
       <div style={{...cardBox, gap:18}}>
         {/* Allergies */}
         <div>
-          <label style={labelStyle}>¿Tienes alergias conocidas?</label>
+          <label style={labelStyle}>{t("onboarding.step2.allergiesQuestion")}</label>
           <TriToggle value={hasAllergies} onChange={setHasAllergies}/>
           {hasAllergies==="Sí" && (
             <AutocompleteInput options={ALLERGY_OPTIONS} selected={allergiesList} onSelect={(v)=>{setAllergiesList(p=>[...p,v]);setAllergiesText([...allergiesList,v].join(", "))}} onRemove={(v)=>{const next=allergiesList.filter(x=>x!==v);setAllergiesList(next);setAllergiesText(next.join(", "))}} placeholder={t("onboarding.searchAllergies")} />
@@ -613,7 +610,7 @@ export default function Onboarding() {
         </div>
         {/* Medications */}
         <div>
-          <label style={labelStyle}>¿Tomas medicación regular?</label>
+          <label style={labelStyle}>{t("onboarding.step2.medsQuestion")}</label>
           <TriToggle value={hasMeds} onChange={setHasMeds}/>
           {hasMeds==="Sí" && (
             <AutocompleteInput options={MED_OPTIONS} selected={medsList} onSelect={(v)=>{setMedsList(p=>[...p,v]);setMedsText([...medsList,v].join(", "))}} onRemove={(v)=>{const next=medsList.filter(x=>x!==v);setMedsList(next);setMedsText(next.join(", "))}} placeholder={t("onboarding.searchMeds")} />
@@ -621,7 +618,7 @@ export default function Onboarding() {
         </div>
         {/* Conditions */}
         <div>
-          <label style={labelStyle}>¿Tienes condiciones diagnosticadas?</label>
+          <label style={labelStyle}>{t("onboarding.step2.conditionsQuestion")}</label>
           <TriToggle value={hasConditions} onChange={setHasConditions}/>
           {hasConditions==="Sí" && (
             <AutocompleteInput options={CONDITION_OPTIONS} selected={conditionsList} onSelect={(v)=>{setConditionsList(p=>[...p,v]);setConditionsText([...conditionsList,v].join(", "))}} onRemove={(v)=>{const next=conditionsList.filter(x=>x!==v);setConditionsList(next);setConditionsText(next.join(", "))}} placeholder={t("onboarding.searchConditions")} />
@@ -629,7 +626,7 @@ export default function Onboarding() {
         </div>
         {/* Blood type */}
         <div>
-          <label style={labelStyle}>Grupo sanguíneo</label>
+          <label style={labelStyle}>{t("onboarding.step2.bloodType")}</label>
           <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
             {BLOOD_TYPES.map((bt)=>(
               <button key={bt} onClick={()=>setBloodType(bt)} style={{
@@ -643,7 +640,7 @@ export default function Onboarding() {
           </div>
         </div>
       </div>
-      <button onClick={nextOb} style={primaryBtn}>Continuar</button>
+      <button onClick={nextOb} style={primaryBtn}>{t("onboarding.continue")}</button>
     </div>
   );
 
@@ -659,8 +656,8 @@ export default function Onboarding() {
           background:`linear-gradient(135deg,${C.pri}15,${C.pur}15)`,
           display:"flex", alignItems:"center", justifyContent:"center",
         }}><I.Users z={24} style={{color:C.pri}}/></div>
-        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>Historial familiar</h2>
-        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>¿Alguna de estas condiciones en tu familia?</p>
+        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>{t("onboarding.step3.title")}</h2>
+        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>{t("onboarding.step3.subtitle")}</p>
       </div>
       <div style={{...cardBox, padding:18}}>
         <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
@@ -673,9 +670,9 @@ export default function Onboarding() {
       </div>
       <div style={{ padding:"8px 14px", borderRadius:10, background:C.priL, border:`1px solid ${C.priS}`, display:"flex", alignItems:"center", gap:8 }}>
         <I.Shield z={14} style={{color:C.pri, flexShrink:0}}/>
-        <span style={{ fontSize:11, color:C.tx2 }}>Esta información es <b style={{color:C.pri}}>estrictamente confidencial</b></span>
+        <span style={{ fontSize:11, color:C.tx2 }} dangerouslySetInnerHTML={{__html: t("onboarding.step3.confidential")}} />
       </div>
-      <button onClick={nextOb} style={primaryBtn}>Continuar</button>
+      <button onClick={nextOb} style={primaryBtn}>{t("onboarding.continue")}</button>
     </div>
   );
 
@@ -691,8 +688,8 @@ export default function Onboarding() {
           background:`linear-gradient(135deg,${C.pri}15,${C.pur}15)`,
           display:"flex", alignItems:"center", justifyContent:"center",
         }}><I.Link z={24} style={{color:C.pri}}/></div>
-        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>Conecta tus dispositivos</h2>
-        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>Opcional — sincroniza datos automáticamente</p>
+        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>{t("onboarding.step4.title")}</h2>
+        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>{t("onboarding.step4.subtitle")}</p>
       </div>
       <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
         {INTEGRATIONS.map((itg)=>{
@@ -720,7 +717,7 @@ export default function Onboarding() {
         })}
       </div>
       <button onClick={nextOb} style={primaryBtn}>
-        {selectedIntegrations.length > 0 ? `Conectar ${selectedIntegrations.length} dispositivo${selectedIntegrations.length>1?"s":""}` : "Continuar sin conectar"}
+        {selectedIntegrations.length > 0 ? t("onboarding.step4.connectButton", {count: selectedIntegrations.length}) : t("onboarding.step4.skipButton")}
       </button>
     </div>
   );
@@ -766,35 +763,35 @@ export default function Onboarding() {
           background:`linear-gradient(135deg,${C.pri}15,${C.pur}15)`,
           display:"flex", alignItems:"center", justifyContent:"center",
         }}><I.Shield z={24} style={{color:C.pri}}/></div>
-        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>Permisos</h2>
-        <p style={{ fontSize:13, color:C.tx2, marginTop:4, lineHeight:1.5 }}>Con todos los permisos activos, nuestra IA te ofrece la mejor experiencia personalizada</p>
+        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>{t("onboarding.step5.title")}</h2>
+        <p style={{ fontSize:13, color:C.tx2, marginTop:4, lineHeight:1.5 }}>{t("onboarding.step5.subtitle")}</p>
       </div>
 
       {/* Recommendation banner */}
       <div style={{ padding:"12px 14px", borderRadius:12, background:`linear-gradient(135deg,${C.priL},${C.purL})`, border:`1px solid ${C.priS}`, display:"flex", alignItems:"flex-start", gap:10 }}>
         <I.Sparkle z={18} style={{color:C.pri, flexShrink:0, marginTop:1}}/>
         <div>
-          <span style={{ fontSize:12, fontWeight:700, color:C.pri }}>Recomendado: todos activos</span>
-          <p style={{ fontSize:11, color:C.tx2, marginTop:2, lineHeight:1.4 }}>Habilitando todos los permisos, la app y la IA pueden ofrecerte recomendaciones precisas, alertas inteligentes y un seguimiento completo de tu salud.</p>
+          <span style={{ fontSize:12, fontWeight:700, color:C.pri }}>{t("onboarding.step5.recommended")}</span>
+          <p style={{ fontSize:11, color:C.tx2, marginTop:2, lineHeight:1.4 }}>{t("onboarding.step5.recommendedDesc")}</p>
         </div>
       </div>
 
       <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-        <PermToggle label="Datos de salud" desc="Almacenar y analizar tus métricas" icon={I.Activity} value={permHealth} onChange={setPermHealth}/>
-        <PermToggle label="Notificaciones" desc="Recordatorios y alertas personalizadas" icon={I.Bell} value={permNotif} onChange={setPermNotif}/>
-        <PermToggle label="Cámara" desc="Escanear documentos y medicamentos" icon={I.Camera} value={permCamera} onChange={setPermCamera}/>
-        <PermToggle label="Archivos" desc="Subir informes y documentos médicos" icon={I.File} value={permFiles} onChange={setPermFiles}/>
+        <PermToggle label={t("onboarding.step5.healthData")} desc={t("onboarding.step5.healthDataDesc")} icon={I.Activity} value={permHealth} onChange={setPermHealth}/>
+        <PermToggle label={t("onboarding.step5.notifications")} desc={t("onboarding.step5.notificationsDesc")} icon={I.Bell} value={permNotif} onChange={setPermNotif}/>
+        <PermToggle label={t("onboarding.step5.camera")} desc={t("onboarding.step5.cameraDesc")} icon={I.Camera} value={permCamera} onChange={setPermCamera}/>
+        <PermToggle label={t("onboarding.step5.files")} desc={t("onboarding.step5.filesDesc")} icon={I.File} value={permFiles} onChange={setPermFiles}/>
       </div>
 
       {/* Security + changeable notes */}
       <div style={{ padding:"10px 14px", borderRadius:10, background:C.sucL, border:`1px solid ${C.sucS}`, display:"flex", alignItems:"flex-start", gap:8 }}>
         <I.Shield z={14} style={{color:C.suc, flexShrink:0, marginTop:1}}/>
         <div>
-          <span style={{ fontSize:11, color:C.tx2 }}>Entorno <b style={{color:C.suc}}>seguro y controlado por ti</b>. Tus datos nunca se comparten con terceros.</span>
-          <p style={{ fontSize:11, color:C.tx2, marginTop:4 }}>Puedes <b style={{color:C.suc}}>cambiar estos permisos</b> en cualquier momento desde tu perfil.</p>
+          <span style={{ fontSize:11, color:C.tx2 }} dangerouslySetInnerHTML={{__html: t("onboarding.step5.secureNote1")}} />
+          <p style={{ fontSize:11, color:C.tx2, marginTop:4 }} dangerouslySetInnerHTML={{__html: t("onboarding.step5.secureNote2")}} />
         </div>
       </div>
-      <button onClick={nextOb} style={primaryBtn}>Continuar</button>
+      <button onClick={nextOb} style={primaryBtn}>{t("onboarding.continue")}</button>
     </div>
   );
 
@@ -815,44 +812,44 @@ export default function Onboarding() {
             fontSize:20, fontWeight:900, color:C.pri,
           }}>{profilePct}%</span>
         </div>
-        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>¡Perfil listo!</h2>
-        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>Tu experiencia ha sido personalizada</p>
+        <h2 style={{ fontSize:22, fontWeight:900, color:C.tx }}>{t("onboarding.step6.title")}</h2>
+        <p style={{ fontSize:13, color:C.tx2, marginTop:4 }}>{t("onboarding.step6.subtitle")}</p>
       </div>
 
       <div style={cardBox}>
         {/* Summary items */}
-        {firstName && <SummaryRow icon="👤" label="Nombre" value={firstName}/>}
-        {dob && <SummaryRow icon="📅" label="Nacimiento" value={dob}/>}
-        {sex && <SummaryRow icon="⚧" label="Sexo" value={{M:"Masculino",F:"Femenino",O:"Otro",N:"No dice"}[sex]}/>}
-        {country && <SummaryRow icon="🌍" label="País" value={country}/>}
-        {height && <SummaryRow icon="📏" label="Altura" value={`${height} cm`}/>}
-        {weight && <SummaryRow icon="⚖️" label="Peso" value={`${weight} kg`}/>}
-        {bloodType && <SummaryRow icon="🩸" label="Grupo sanguíneo" value={bloodType}/>}
-        {familyConditions.length>0 && <SummaryRow icon="👨‍👩‍👧" label="Historial familiar" value={`${familyConditions.length} condiciones`}/>}
-        {selectedIntegrations.length>0 && <SummaryRow icon="🔗" label="Integraciones" value={`${selectedIntegrations.length} conectadas`}/>}
+        {firstName && <SummaryRow icon="👤" label={t("onboarding.step6.name")} value={firstName}/>}
+        {dob && <SummaryRow icon="📅" label={t("onboarding.step6.dob")} value={dob}/>}
+        {sex && <SummaryRow icon="⚧" label={t("onboarding.step6.sex")} value={{M:t("onboarding.step1.male"),F:t("onboarding.step1.female"),O:t("onboarding.step1.other"),N:t("onboarding.step1.preferNotSay")}[sex]}/>}
+        {country && <SummaryRow icon="🌍" label={t("onboarding.step6.country")} value={country}/>}
+        {height && <SummaryRow icon="📏" label={t("onboarding.step6.height")} value={`${height} cm`}/>}
+        {weight && <SummaryRow icon="⚖️" label={t("onboarding.step6.weight")} value={`${weight} kg`}/>}
+        {bloodType && <SummaryRow icon="🩸" label={t("onboarding.step6.bloodType")} value={bloodType}/>}
+        {familyConditions.length>0 && <SummaryRow icon="👨‍👩‍👧" label={t("onboarding.step6.familyHistory")} value={`${familyConditions.length} ${t("onboarding.step6.conditions")}`}/>}
+        {selectedIntegrations.length>0 && <SummaryRow icon="🔗" label={t("onboarding.step6.integrations")} value={`${selectedIntegrations.length} ${t("onboarding.step6.connected")}`}/>}
       </div>
 
       {/* Next steps */}
       <div style={{ ...cardBox, background:`linear-gradient(135deg,${C.priL},${C.purL})`, border:`1px solid ${C.priS}` }}>
         <div style={{ fontSize:13, fontWeight:800, color:C.pri, marginBottom:4 }}>
-          <I.Zap z={14} style={{verticalAlign:"middle", marginRight:4}}/> Próximos pasos
+          <I.Zap z={14} style={{verticalAlign:"middle", marginRight:4}}/> {t("onboarding.step6.nextSteps")}
         </div>
         <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-          {["Explora tu dashboard personalizado","Registra tu primera métrica de salud","Revisa tu plan de bienestar semanal"].map((t,i)=>(
+          {[t("onboarding.step6.nextStep1"),t("onboarding.step6.nextStep2"),t("onboarding.step6.nextStep3")].map((step,i)=>(
             <div key={i} style={{ display:"flex", alignItems:"center", gap:8 }}>
               <div style={{
                 width:20, height:20, borderRadius:6, background:C.pri,
                 display:"flex", alignItems:"center", justifyContent:"center",
                 fontSize:10, fontWeight:800, color:"white", flexShrink:0,
               }}>{i+1}</div>
-              <span style={{ fontSize:12, color:C.tx2, fontWeight:500 }}>{t}</span>
+              <span style={{ fontSize:12, color:C.tx2, fontWeight:500 }}>{step}</span>
             </div>
           ))}
         </div>
       </div>
 
       <button onClick={()=>completeOnboarding(collectData())} style={{...primaryBtn, opacity:1, background:`linear-gradient(135deg,${C.suc},#1E8A56)`}}>
-        <I.Sparkle z={16} sk="white" sw={2} style={{verticalAlign:"middle", marginRight:6}}/> Ir a mi dashboard
+        <I.Sparkle z={16} sk="white" sw={2} style={{verticalAlign:"middle", marginRight:6}}/> {t("onboarding.step6.enterApp")}
       </button>
     </div>
   );

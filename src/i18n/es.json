@@ -184,14 +184,12 @@
     "uploadError": "Error al subir: {{message}}"
   },
   "onboarding": {
-    "welcome": "Tu salud digital, protegida con la mejor tecnología",
     "signIn": "Iniciar sesión",
     "createAccount": "Crear cuenta",
     "email": "tu@email.com",
     "password": "Contraseña",
     "createPassword": "Crea una contraseña segura",
     "continueGoogle": "Continuar con Google",
-    "protected": "Tu salud, protegida",
     "verifying": "Verificando...",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "resetSent": "✓ Email de recuperación enviado. Revisa tu bandeja de entrada.",
@@ -201,7 +199,7 @@
     "searchMeds": "Escribe para buscar medicamentos...",
     "searchConditions": "Escribe para buscar condiciones...",
     "heroTagline": "Tu salud digital, protegida\ncon la mejor tecnología",
-    "heroSubtagline": "Clarity for your health. Confidence for their future.",
+    "heroSubtagline": "Claridad para tu salud. Confianza para su futuro.",
     "badgeE2E": "E2E Cifrado",
     "pwRules": {
       "length": "Mínimo 12 caracteres",
@@ -209,13 +207,105 @@
       "number": "1 número",
       "special": "1 carácter especial (!@#$...)"
     },
-    "steps": {
-      "personalData": "Datos personales",
-      "healthStatus": "Estado de salud",
+    "errors": {
+      "emailInUse": "Este email ya está registrado. Inicia sesión.",
+      "weakPassword": "La contraseña es demasiado débil",
+      "invalidEmail": "Email no válido",
+      "tooManyRequests": "Demasiados intentos. Espera un momento.",
+      "invalidCredential": "Email o contraseña incorrectos",
+      "userNotFound": "No existe una cuenta con ese email",
+      "wrongPassword": "Contraseña incorrecta",
+      "generic": "Ha ocurrido un error. Inténtalo de nuevo.",
+      "enterEmailPassword": "Introduce email y contraseña",
+      "passwordRequirements": "La contraseña no cumple todos los requisitos"
+    },
+    "welcome": {
+      "helloUser": "¡Hola, {{name}}!",
+      "helloDefault": "¡Bienvenido!",
+      "subtitle1": "Vamos a personalizar tu experiencia de salud en <b>menos de 2 minutos</b>.",
+      "subtitle2": "Cuanto más sepamos, mejores recomendaciones recibirás.",
+      "badge1": "100% privado",
+      "badge2": "~2 min",
+      "badge3": "Editable después",
+      "startButton": "Comenzar personalización"
+    },
+    "step1": {
+      "title": "Datos personales",
+      "subtitle": "Información básica para tu perfil",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "dob": "Fecha de nacimiento",
+      "sex": "Sexo biológico",
+      "selectSex": "Seleccionar",
+      "male": "Masculino",
+      "female": "Femenino",
+      "other": "Otro",
+      "preferNotSay": "Prefiero no decir",
+      "country": "País de residencia",
+      "selectCountry": "Seleccionar país",
+      "height": "Altura (cm)",
+      "weight": "Peso (kg)"
+    },
+    "step2": {
+      "title": "Estado de salud",
+      "subtitle": "Información básica para personalizar",
+      "allergiesQuestion": "¿Tienes alergias conocidas?",
+      "medsQuestion": "¿Tomas medicación regular?",
+      "conditionsQuestion": "¿Tienes condiciones diagnosticadas?",
+      "bloodType": "Grupo sanguíneo",
+      "dontKnow": "No lo sé",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "step3": {
+      "title": "Historial familiar",
+      "subtitle": "¿Alguna de estas condiciones en tu familia?",
+      "confidential": "Esta información es <b style='color:#4F6AE8'>estrictamente confidencial</b>"
+    },
+    "step4": {
+      "title": "Integraciones",
+      "subtitle": "Conecta tus dispositivos para datos en tiempo real",
+      "connectButton": "Conectar {{count}} dispositivo(s)",
+      "skipButton": "Continuar sin conectar"
+    },
+    "step5": {
+      "title": "Permisos",
+      "subtitle": "Con todos los permisos activos, nuestra IA te ofrece la mejor experiencia personalizada",
+      "recommended": "Recomendado: todos activos",
+      "recommendedDesc": "Habilitando todos los permisos, la app y la IA pueden ofrecerte recomendaciones precisas, alertas inteligentes y un seguimiento completo de tu salud.",
+      "healthData": "Datos de salud",
+      "healthDataDesc": "Almacenar y analizar tus métricas",
+      "notifications": "Notificaciones",
+      "notificationsDesc": "Recordatorios y alertas personalizadas",
+      "camera": "Cámara",
+      "cameraDesc": "Escanear documentos y medicamentos",
+      "files": "Archivos",
+      "filesDesc": "Subir informes y documentos médicos",
+      "secureNote1": "Entorno <b style='color:#30A46C'>seguro y controlado por ti</b>. Tus datos nunca se comparten con terceros.",
+      "secureNote2": "Puedes <b style='color:#30A46C'>cambiar estos permisos</b> en cualquier momento desde tu perfil."
+    },
+    "step6": {
+      "title": "¡Perfil listo!",
+      "subtitle": "Tu experiencia ha sido personalizada",
+      "name": "Nombre",
+      "dob": "Nacimiento",
+      "sex": "Sexo",
+      "country": "País",
+      "height": "Altura",
+      "weight": "Peso",
+      "bloodType": "Grupo sanguíneo",
       "familyHistory": "Historial familiar",
+      "conditions": "condiciones",
       "integrations": "Integraciones",
-      "permissions": "Permisos",
-      "complete": "Completado"
-    }
+      "connected": "conectadas",
+      "nextSteps": "Próximos pasos",
+      "nextStep1": "Explora tu dashboard personalizado",
+      "nextStep2": "Registra tu primera métrica de salud",
+      "nextStep3": "Revisa tu plan de bienestar semanal",
+      "enterApp": "Entrar a Ledora AI"
+    },
+    "continue": "Continuar",
+    "back": "Atrás",
+    "stepOf": "Paso {{current}} de {{total}}"
   }
 }
