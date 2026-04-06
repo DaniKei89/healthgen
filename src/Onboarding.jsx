@@ -295,9 +295,9 @@ export default function Onboarding() {
           boxShadow:`0 8px 24px ${C.pri}30`,
         }}><I.Heart z={26} sk="white" sw={2}/></div>
         <h1 style={{ fontSize:28, fontWeight:900, color:C.tx, letterSpacing:-0.5 }}>
-          Health<span style={{ color:C.pri }}>Gen</span>
+          Ledora<span style={{ color:C.pri }}>AI</span>
         </h1>
-        <p style={{ fontSize:14, color:C.tx2, marginTop:4 }}>Tu salud, protegida</p>
+        <p style={{ fontSize:14, color:C.tx2, marginTop:4 }}>Your health, across generations.</p>
       </div>
 
       {/* Sign In / Sign Up toggle */}
