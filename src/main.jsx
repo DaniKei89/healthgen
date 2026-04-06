@@ -29,7 +29,7 @@ function LoadingSplash() {
         animation: 'breathe 2s ease-in-out infinite',
       }}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M4 4c4 0 6 3 8 3s4-3 8-3"/><path d="M4 10c4 0 6 3 8 3s4-3 8-3"/><path d="M4 16c4 0 6 3 8 3s4-3 8-3"/><line x1="7" y1="4" x2="7" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="17" y1="4" x2="17" y2="10"/><line x1="9.5" y1="10" x2="9.5" y2="16"/><line x1="14.5" y1="10" x2="14.5" y2="16"/>
+          <path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M2 9c6.667 6 13.333 0 20 6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="M17 6l-2.5-2.5"/><path d="M14 9.5l-2.5-2.5"/><path d="M7 18l2.5 2.5"/><path d="M10 14.5l2.5 2.5"/>
         </svg>
       </div>
       <p style={{ fontSize: 15, fontWeight: 800, color: '#0F1117', marginTop: 14 }}>
