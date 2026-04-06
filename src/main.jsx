@@ -28,8 +28,15 @@ function LoadingSplash() {
         boxShadow: '0 8px 24px rgba(79,106,232,0.3)',
         animation: 'breathe 2s ease-in-out infinite',
       }}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M2 9c6.667 6 13.333 0 20 6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="M17 6l-2.5-2.5"/><path d="M14 9.5l-2.5-2.5"/><path d="M7 18l2.5 2.5"/><path d="M10 14.5l2.5 2.5"/>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M1 12C4 5,8 5,12 12C16 19,20 19,23 12" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+          <path d="M1 12C4 19,8 19,12 12C16 5,20 5,23 12" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+          <line x1="6" y1="8" x2="6" y2="16" stroke="white" strokeWidth="1" opacity="0.3" strokeLinecap="round"/>
+          <line x1="12" y1="6" x2="12" y2="18" stroke="white" strokeWidth="1.2" opacity="0.4" strokeLinecap="round"/>
+          <line x1="18" y1="8" x2="18" y2="16" stroke="white" strokeWidth="1" opacity="0.3" strokeLinecap="round"/>
+          <circle cx="12" cy="6" r="2" fill="white"/>
+          <circle cx="8" cy="17" r="1.5" fill="white" opacity="0.6"/>
+          <circle cx="16" cy="17" r="1.5" fill="white" opacity="0.6"/>
         </svg>
       </div>
       <p style={{ fontSize: 15, fontWeight: 800, color: '#0F1117', marginTop: 14 }}>

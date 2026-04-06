@@ -1,19 +1,31 @@
 <svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="192" height="192" rx="40" fill="url(#grad)"/>
-  <g transform="translate(36,36) scale(5)" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
-    <path d="M2 15c6.667-6 13.333 0 20-6"/>
-    <path d="M2 9c6.667 6 13.333 0 20 6"/>
-    <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/>
-    <path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/>
-    <path d="M17 6l-2.5-2.5"/>
-    <path d="M14 9.5l-2.5-2.5"/>
-    <path d="M7 18l2.5 2.5"/>
-    <path d="M10 14.5l2.5 2.5"/>
-  </g>
+  <rect width="192" height="192" rx="40" fill="url(#bg)"/>
   <defs>
-    <linearGradient id="grad" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+    <linearGradient id="bg" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
       <stop stop-color="#4F6AE8"/>
       <stop offset="1" stop-color="#7C66DC"/>
     </linearGradient>
   </defs>
+  <!-- Back strand -->
+  <path d="M30 96C46 52,66 52,96 96C126 140,146 140,162 96" stroke="rgba(255,255,255,0.45)" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <!-- Base pair connectors -->
+  <line x1="52" y1="72" x2="52" y2="120" stroke="white" stroke-width="2" opacity="0.2" stroke-linecap="round"/>
+  <line x1="72" y1="58" x2="72" y2="134" stroke="white" stroke-width="2.5" opacity="0.25" stroke-linecap="round"/>
+  <line x1="96" y1="54" x2="96" y2="138" stroke="white" stroke-width="2.8" opacity="0.35" stroke-linecap="round"/>
+  <line x1="120" y1="58" x2="120" y2="134" stroke="white" stroke-width="2.5" opacity="0.25" stroke-linecap="round"/>
+  <line x1="140" y1="72" x2="140" y2="120" stroke="white" stroke-width="2" opacity="0.2" stroke-linecap="round"/>
+  <!-- Front strand -->
+  <path d="M30 96C46 140,66 140,96 96C126 52,146 52,162 96" stroke="white" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <!-- Crossover dots -->
+  <circle cx="62" cy="96" r="4" fill="white" opacity="0.5"/>
+  <circle cx="130" cy="96" r="4" fill="white" opacity="0.5"/>
+  <!-- You node -->
+  <circle cx="96" cy="54" r="8" fill="white"/>
+  <circle cx="96" cy="54" r="12" fill="none" stroke="white" stroke-width="1.5" opacity="0.3"/>
+  <!-- Descendant branches -->
+  <path d="M90 60C82 82,74 100,68 126" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M102 60C110 82,118 100,124 126" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <!-- Children nodes -->
+  <circle cx="67" cy="128" r="6" fill="white" opacity="0.8"/>
+  <circle cx="125" cy="128" r="6" fill="white" opacity="0.8"/>
 </svg>
