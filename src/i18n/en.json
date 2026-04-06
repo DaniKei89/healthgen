@@ -200,6 +200,9 @@
     "searchAllergies": "Type to search allergies...",
     "searchMeds": "Type to search medications...",
     "searchConditions": "Type to search conditions...",
+    "heroTagline": "Your digital health, protected\nwith the best technology",
+    "heroSubtagline": "Clarity for your health. Confidence for their future.",
+    "badgeE2E": "E2E Encrypted",
     "pwRules": {
       "length": "Minimum 12 characters",
       "upper": "1 uppercase letter",

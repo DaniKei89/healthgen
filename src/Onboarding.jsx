@@ -921,15 +921,18 @@ export default function Onboarding() {
             }}><I.Heart z={34} sk="white" sw={2}/></div>
             <h1 style={{ fontSize:36, fontWeight:900, color:"white", letterSpacing:-0.5 }}>Ledora AI</h1>
             <p style={{ fontSize:15, color:"rgba(255,255,255,0.7)", marginTop:8, lineHeight:1.5 }}>
-              Tu salud digital, protegida<br/>con la mejor tecnología
+              {t("onboarding.heroTagline")}
+            </p>
+            <p style={{ fontSize:12, color:"rgba(255,255,255,0.5)", marginTop:6, fontStyle:"italic" }}>
+              {t("onboarding.heroSubtagline")}
             </p>
             <div style={{ marginTop:24, display:"flex", gap:10, justifyContent:"center" }}>
-              {["E2E Cifrado","GDPR","HIPAA"].map((t)=>(
-                <span key={t} style={{
+              {[t("onboarding.badgeE2E"),"GDPR","HIPAA"].map((badge)=>(
+                <span key={badge} style={{
                   padding:"4px 12px", borderRadius:20, fontSize:10, fontWeight:600,
                   background:"rgba(255,255,255,0.12)", color:"rgba(255,255,255,0.8)",
                   border:"1px solid rgba(255,255,255,0.1)",
-                }}>{t}</span>
+                }}>{badge}</span>
               ))}
             </div>
           </div>
