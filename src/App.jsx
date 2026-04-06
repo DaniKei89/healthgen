@@ -107,8 +107,8 @@ export default function App(){
   const[uploadProg,setUploadProg]=useState(0);
   const[uploadType,setUploadType]=useState("Otro");
   const fileRef=useRef(null);const[bio,sB]=useState("ir");const[fam,sF]=useState("me");const[mod,sM]=useState(null);const[exp,sE]=useState(null);const[an,sA]=useState(false);const[msgs,setMsgs]=useState(CHAT_INIT);const[inp,setInp]=useState("");const[tipCat,setTC]=useState("all");const chatRef=useRef(null);
-  const[dismissed,setDismissed]=useState(()=>{try{return JSON.parse(localStorage.getItem("hg_dismissed_tips")||"[]")}catch{return[]}});
-  const dismiss=(id)=>{const next=[...dismissed,id];setDismissed(next);localStorage.setItem("hg_dismissed_tips",JSON.stringify(next))};
+  const[dismissed,setDismissed]=useState(()=>{try{return JSON.parse(localStorage.getItem("ledora_dismissed_tips")||"[]")}catch{return[]}});
+  const dismiss=(id)=>{const next=[...dismissed,id];setDismissed(next);localStorage.setItem("ledora_dismissed_tips",JSON.stringify(next))};
   const od=onboardingData||{};
   const tips=[];
   if(!od.selectedIntegrations||od.selectedIntegrations.length===0)tips.push({id:"devices",icon:"⌚",color:C.pri,title:"Conecta un dispositivo",desc:"Sincroniza tu wearable para obtener datos en tiempo real y mejores recomendaciones."});

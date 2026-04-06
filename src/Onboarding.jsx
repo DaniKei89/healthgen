@@ -194,7 +194,7 @@ export default function Onboarding() {
     if (isSignUp && !passwordValid(password)) { setErr("La contraseña no cumple todos los requisitos"); return; }
     setErr(""); setBusy(true);
     try {
-      localStorage.setItem("hg_auth_v2", "true");
+      localStorage.setItem("ledora_auth_v2", "true");
       if (isSignUp) {
         const result = await signUpWithEmail(email, password);
         markNewUser(result.user.uid);
@@ -208,7 +208,7 @@ export default function Onboarding() {
   const handleGoogleAuth = async () => {
     setErr(""); setBusy(true);
     try {
-      localStorage.setItem("hg_auth_v2", "true");
+      localStorage.setItem("ledora_auth_v2", "true");
       const result = await signInWithGoogle();
       const additionalInfo = getAdditionalUserInfo(result);
       if (additionalInfo?.isNewUser) {

@@ -19,7 +19,7 @@ i18n
     detection: {
       order: ["localStorage", "navigator"],
       caches: ["localStorage"],
-      lookupLocalStorage: "hg_language",
+      lookupLocalStorage: "ledora_language",
     },
   });
 

@@ -5,9 +5,9 @@ import { getUserProfile, saveUserProfile } from "./services/firestore";
 const AuthContext = createContext(null);
 
 // Cache key helpers
-const cacheKey = (uid) => `hg_profile_cache_${uid}`;
-const doneKey = (uid) => `hg_onboarding_done_${uid}`;
-const needsKey = (uid) => `hg_needs_onboarding_${uid}`;
+const cacheKey = (uid) => `ledora_profile_cache_${uid}`;
+const doneKey = (uid) => `ledora_onboarding_done_${uid}`;
+const needsKey = (uid) => `ledora_needs_onboarding_${uid}`;
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -19,8 +19,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsub = onAuthChange((firebaseUser) => {
       // One-time migration: force logout for sessions from old auth system
-      if (firebaseUser && !localStorage.getItem("hg_auth_v2")) {
-        localStorage.setItem("hg_auth_v2", "true");
+      if (firebaseUser && !localStorage.getItem("ledora_auth_v2")) {
+        localStorage.setItem("ledora_auth_v2", "true");
         logOut();
         setUser(null);
         setAuthStep("welcome");
@@ -73,7 +73,7 @@ export function AuthProvider({ children }) {
             localStorage.removeItem(needsKey(uid));
           } else if (localDone && !cachedProfile?.firstName) {
             // Onboarding done in localStorage but not in Firestore — migrate
-            const localData = localStorage.getItem(`hg_onboarding_data_${uid}`);
+            const localData = localStorage.getItem(`ledora_onboarding_data_${uid}`);
             if (localData) {
               let parsed = {};
               try { parsed = JSON.parse(localData); } catch { parsed = {}; }
@@ -99,7 +99,7 @@ export function AuthProvider({ children }) {
               };
               saveUserProfile(uid, profileData).then(() => {
                 localStorage.setItem(cacheKey(uid), JSON.stringify(profileData));
-                localStorage.removeItem(`hg_onboarding_data_${uid}`);
+                localStorage.removeItem(`ledora_onboarding_data_${uid}`);
               }).catch(() => {});
               setOnboardingData(profileData);
             }
@@ -166,7 +166,7 @@ export function AuthProvider({ children }) {
 
   const saveOnboardingProgress = useCallback((data) => {
     if (user) {
-      localStorage.setItem(`hg_onboarding_data_${user.uid}`, JSON.stringify(data));
+      localStorage.setItem(`ledora_onboarding_data_${user.uid}`, JSON.stringify(data));
       setOnboardingData(data);
     }
   }, [user]);

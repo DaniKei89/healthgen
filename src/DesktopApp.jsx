@@ -129,8 +129,8 @@ export default function DesktopApp(){
   const fileRef=useRef(null);
   const closeOTP=useCallback(()=>sM(null),[]);
   const nextId=useRef(8);
-  const[dismissed,setDismissed]=useState(()=>{try{return JSON.parse(localStorage.getItem("hg_dismissed_tips")||"[]")}catch{return[]}});
-  const dismiss=(id)=>{const next=[...dismissed,id];setDismissed(next);localStorage.setItem("hg_dismissed_tips",JSON.stringify(next))};
+  const[dismissed,setDismissed]=useState(()=>{try{return JSON.parse(localStorage.getItem("ledora_dismissed_tips")||"[]")}catch{return[]}});
+  const dismiss=(id)=>{const next=[...dismissed,id];setDismissed(next);localStorage.setItem("ledora_dismissed_tips",JSON.stringify(next))};
   const od=onboardingData||{};
   const tips=[];
   if(!od.selectedIntegrations||od.selectedIntegrations.length===0)tips.push({id:"devices",icon:"⌚",color:C.pri,title:"Conecta un dispositivo",desc:"Sincroniza tu wearable para datos en tiempo real."});
