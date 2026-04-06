@@ -10,6 +10,7 @@ import { chatWithAI, analyzeDocument, isAIAvailable } from "./services/ai";
 /* ═══ ICONS ═══ */
 const S=p=>(<svg width={p.z||20} height={p.z||20} viewBox="0 0 24 24" fill="none" stroke={p.sk||"currentColor"} strokeWidth={p.sw||1.7} strokeLinecap="round" strokeLinejoin="round" style={p.style}>{p.children}</svg>);
 const I={
+Logo:p=><S {...p}><path d="M4 4c4 0 6 3 8 3s4-3 8-3"/><path d="M4 10c4 0 6 3 8 3s4-3 8-3"/><path d="M4 16c4 0 6 3 8 3s4-3 8-3"/><line x1="7" y1="4" x2="7" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="17" y1="4" x2="17" y2="10"/><line x1="9.5" y1="10" x2="9.5" y2="16"/><line x1="14.5" y1="10" x2="14.5" y2="16"/></S>,
 Heart:p=><S {...p}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></S>,
 User:p=><S {...p}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></S>,
 Users:p=><S {...p}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></S>,
@@ -415,7 +416,7 @@ export default function DesktopApp(){
     <div style={{width:240,minHeight:"100vh",background:C.card,borderRight:`1px solid ${C.brd}`,display:"flex",flexDirection:"column",position:"fixed",top:0,left:0,zIndex:30}}>
       {/* Logo */}
       <div style={{padding:"20px 20px 16px",display:"flex",alignItems:"center",gap:8}}>
-        <div style={{width:34,height:34,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",background:`linear-gradient(135deg,${C.pri},${C.pur})`,boxShadow:`0 2px 8px ${C.pri}30`}}><I.Heart z={16} sk="white" sw={2.2}/></div>
+        <div style={{width:34,height:34,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",background:`linear-gradient(135deg,${C.pri},${C.pur})`,boxShadow:`0 2px 8px ${C.pri}30`}}><I.Logo z={16} sk="white" sw={2.2}/></div>
         <span style={{fontSize:16,fontWeight:900,color:C.tx}}>Ledora<span style={{color:C.pri}}>AI</span></span>
       </div>
       <div style={{padding:"0 12px",flex:1}}>

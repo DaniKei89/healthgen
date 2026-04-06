@@ -8,6 +8,7 @@ const S = (p) => (
   <svg width={p.z||20} height={p.z||20} viewBox="0 0 24 24" fill="none" stroke={p.sk||"currentColor"} strokeWidth={p.sw||1.7} strokeLinecap="round" strokeLinejoin="round" style={p.style}>{p.children}</svg>
 );
 const I = {
+  Logo:(p)=><S {...p}><path d="M4 4c4 0 6 3 8 3s4-3 8-3"/><path d="M4 10c4 0 6 3 8 3s4-3 8-3"/><path d="M4 16c4 0 6 3 8 3s4-3 8-3"/><line x1="7" y1="4" x2="7" y2="10"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="17" y1="4" x2="17" y2="10"/><line x1="9.5" y1="10" x2="9.5" y2="16"/><line x1="14.5" y1="10" x2="14.5" y2="16"/></S>,
   Heart:(p)=><S {...p}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></S>,
   Lock:(p)=><S {...p}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></S>,
   Shield:(p)=><S {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></S>,
@@ -354,7 +355,7 @@ export default function Onboarding() {
           background:`linear-gradient(135deg,${C.pri},${C.pur})`,
           display:"flex", alignItems:"center", justifyContent:"center",
           boxShadow:`0 8px 24px ${C.pri}30`,
-        }}><I.Heart z={26} sk="white" sw={2}/></div>
+        }}><I.Logo z={26} sk="white" sw={2}/></div>
         <h1 style={{ fontSize:28, fontWeight:900, color:C.tx, letterSpacing:-0.5 }}>
           Ledora<span style={{ color:C.pri }}>AI</span>
         </h1>
@@ -915,7 +916,7 @@ export default function Onboarding() {
               background:"rgba(255,255,255,0.15)", backdropFilter:"blur(10px)",
               display:"flex", alignItems:"center", justifyContent:"center",
               border:"1px solid rgba(255,255,255,0.2)",
-            }}><I.Heart z={34} sk="white" sw={2}/></div>
+            }}><I.Logo z={34} sk="white" sw={2}/></div>
             <h1 style={{ fontSize:36, fontWeight:900, color:"white", letterSpacing:-0.5 }}>Ledora AI</h1>
             <p style={{ fontSize:15, color:"rgba(255,255,255,0.7)", marginTop:8, lineHeight:1.5 }}>
               {t("onboarding.heroTagline")}
