@@ -79,7 +79,7 @@
     "addFamilyTitle": "Add Family Member",
     "addFamilySubtitle": "AI will analyze hereditary patterns",
     "transferNote": "18+ Transfer:",
-    "transferDesc": "At 18, transfer the complete record to their own HealthGen account."
+    "transferDesc": "At 18, transfer the complete record to their own Ledora AI account."
   },
   "familyRelations": {
     "paternalGrandfather": "Pat. Grandfather",
@@ -111,7 +111,7 @@
     "title": "AI Assistant",
     "subtitle": "Informational · Always consult your doctor",
     "placeholder": "Ask about your health...",
-    "aiLabel": "HealthGen AI"
+    "aiLabel": "Ledora AI AI"
   },
   "tips": {
     "title": "Recommendations",

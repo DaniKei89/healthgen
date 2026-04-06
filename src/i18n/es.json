@@ -79,7 +79,7 @@
     "addFamilyTitle": "Añadir Familiar",
     "addFamilySubtitle": "La IA analizará patrones hereditarios",
     "transferNote": "Transferencia 18+:",
-    "transferDesc": "Al cumplir 18, transfiere el historial completo a su propia cuenta HealthGen."
+    "transferDesc": "Al cumplir 18, transfiere el historial completo a su propia cuenta Ledora AI."
   },
   "familyRelations": {
     "paternalGrandfather": "Abuelo Pat.",
@@ -111,7 +111,7 @@
     "title": "Asistente IA",
     "subtitle": "Informativo · Consulta siempre tu médico",
     "placeholder": "Pregunta sobre tu salud...",
-    "aiLabel": "HealthGen IA"
+    "aiLabel": "Ledora AI IA"
   },
   "tips": {
     "title": "Recomendaciones",

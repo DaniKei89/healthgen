@@ -1,6 +1,6 @@
 {
-  "appId": "com.healthgen.app",
-  "appName": "HealthGen",
+  "appId": "com.ledoraai.app",
+  "appName": "Ledora AI",
   "webDir": "dist",
   "server": {
     "androidScheme": "https"

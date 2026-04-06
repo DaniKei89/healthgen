@@ -33,7 +33,7 @@ function LoadingSplash() {
         </svg>
       </div>
       <p style={{ fontSize: 15, fontWeight: 800, color: '#0F1117', marginTop: 14 }}>
-        Health<span style={{ color: '#4F6AE8' }}>Gen</span>
+        Ledora<span style={{ color: '#4F6AE8' }}>AI</span>
       </p>
     </div>
   )

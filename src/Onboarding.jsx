@@ -834,7 +834,7 @@ export default function Onboarding() {
               display:"flex", alignItems:"center", justifyContent:"center",
               border:"1px solid rgba(255,255,255,0.2)",
             }}><I.Heart z={34} sk="white" sw={2}/></div>
-            <h1 style={{ fontSize:36, fontWeight:900, color:"white", letterSpacing:-0.5 }}>HealthGen</h1>
+            <h1 style={{ fontSize:36, fontWeight:900, color:"white", letterSpacing:-0.5 }}>Ledora AI</h1>
             <p style={{ fontSize:15, color:"rgba(255,255,255,0.7)", marginTop:8, lineHeight:1.5 }}>
               Tu salud digital, protegida<br/>con la mejor tecnología
             </p>

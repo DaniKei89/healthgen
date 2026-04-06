@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon-192.svg', 'icon-512.svg'],
       manifest: {
-        name: 'HealthGen',
-        short_name: 'HealthGen',
-        description: 'Tu salud digital, protegida. Your digital health, protected.',
+        name: 'Ledora AI',
+        short_name: 'Ledora AI',
+        description: 'Your health, across generations. Clarity for your health. Confidence for their future.',
         theme_color: '#4F6AE8',
         background_color: '#F4F5F9',
         display: 'standalone',
