@@ -142,7 +142,7 @@ export default function DesktopApp(){
 
   useEffect(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight},[msgs]);
 
-  const mem=TM.find(m=>m.id===fam),lat=BL[BL.length-1];
+  const mem=TM.find(m=>m.id===fam),lat=BL.length>0?BL[BL.length-1]:null;
   const tabs=[{id:"d",l:"Home",ic:I.Heart},{id:"f",l:"Familia",ic:I.DNA},{id:"e",l:"Datos",ic:I.Act},{id:"a",l:"IA",ic:I.Chat},{id:"t",l:"Tips",ic:I.Leaf},{id:"o",l:"Docs",ic:I.File},{id:"p",l:"Perfil",ic:I.User}];
   const alertCount=INS.filter(i=>i.ur!=="low").length;
 
@@ -196,7 +196,8 @@ export default function DesktopApp(){
   const deleteDoc=(id)=>{setDocs(prev=>{const doc=prev.find(d=>d.id===id);if(doc?.preview)URL.revokeObjectURL(doc.preview);return prev.filter(d=>d.id!==id)});if(previewDoc?.id===id)setPreviewDoc(null)};
 
   /* ═══ HOME ═══ */
-  const Dash=()=>{const oob=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]<r.n||lat[k]>r.x);const ok=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]>=r.n&&lat[k]<=r.x);
+  const Dash=()=>{if(!lat)return <div style={{display:"flex",flexDirection:"column",gap:16}}>{isDemo&&<div style={{padding:"10px 16px",borderRadius:12,background:`linear-gradient(135deg,${C.wrnL},${C.wrnS}40)`,border:`1px solid ${C.wrnS}`,display:"flex",alignItems:"center",gap:8}}><I.Eye z={14} style={{color:C.wrn}}/><p style={{fontSize:12,fontWeight:600,color:C.wrn}}>{t("demo.banner")}</p></div>}<div><p style={{fontSize:14,color:C.tx3}}>Buenos días</p><h1 style={{fontSize:32,fontWeight:900,color:C.tx}}>{realProfile?.firstName||"User"}</h1></div><Cd style={{padding:24,textAlign:"center"}}><I.Act z={32} style={{color:C.pri,opacity:0.3,margin:"0 auto 10px"}}/><p style={{fontSize:15,fontWeight:700,color:C.tx}}>Welcome to Ledora AI</p><p style={{fontSize:13,color:C.tx3,marginTop:6}}>Upload your first lab results or medical document to get started.</p></Cd></div>;
+  const oob=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]<r.n||lat[k]>r.x);const ok=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]>=r.n&&lat[k]<=r.x);
   return <div style={{display:"flex",flexDirection:"column",gap:20}}>
     {/* Welcome */}
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -263,7 +264,8 @@ export default function DesktopApp(){
   </div>;
 
   /* ═══ EVOLUTION ═══ */
-  const Evo=()=>{const r=RG[bio],v=lat[bio],f=BL[0][bio],cg=(((v-f)/f)*100).toFixed(1),lo=v<r.n,hi=v>r.x,oo=lo||hi,clr=oo?C.dan:C.suc;
+  const Evo=()=>{if(!lat||BL.length===0)return <div style={{display:"flex",flexDirection:"column",gap:16}}><h2 style={{fontSize:22,fontWeight:900,color:C.tx}}>Evolution</h2><Cd style={{padding:24,textAlign:"center"}}><p style={{fontSize:14,color:C.tx3}}>No lab data yet. Upload your first results to see trends.</p></Cd></div>;
+  const r=RG[bio],v=lat[bio],f=BL[0][bio],cg=(((v-f)/f)*100).toFixed(1),lo=v<r.n,hi=v>r.x,oo=lo||hi,clr=oo?C.dan:C.suc;
   return <div style={{display:"flex",flexDirection:"column",gap:16}}>
     <h2 style={{fontSize:24,fontWeight:900,color:C.tx}}>Evolución</h2>
     <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{Object.entries(RG).map(([k,rr])=>{const vv=lat[k],o2=vv<rr.n||vv>rr.x,at=bio===k;return <button key={k} onClick={()=>sB(k)} style={{padding:"8px 16px",borderRadius:10,fontSize:12,fontWeight:at?700:500,cursor:"pointer",background:at?C.pri:C.card,color:at?"white":C.tx2,border:`1px solid ${at?C.pri:o2?C.danS:C.brd}`,boxShadow:at?`0 2px 8px ${C.pri}35`:"none"}}>{o2&&!at&&<span style={{display:"inline-block",width:5,height:5,borderRadius:3,background:C.dan,marginRight:4}}/>}{rr.l}</button>})}</div>

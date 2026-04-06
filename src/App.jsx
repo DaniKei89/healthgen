@@ -121,7 +121,7 @@ export default function App(){
   useEffect(()=>{sA(false);const t=setTimeout(()=>sA(true),60);return()=>clearTimeout(t)},[tab]);
   useEffect(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight},[msgs]);
   const closeOTP=useCallback(()=>sM(null),[]);
-  const mem=TM.find(m=>m.id===fam),lat=BL[BL.length-1],ac=an?"opacity-100 translate-y-0":"opacity-0 translate-y-3";
+  const mem=TM.find(m=>m.id===fam),lat=BL.length>0?BL[BL.length-1]:null,ac=an?"opacity-100 translate-y-0":"opacity-0 translate-y-3";
   const tabs=[{id:"d",l:t("nav.home"),ic:I.Heart},{id:"f",l:t("nav.family"),ic:I.DNA},{id:"e",l:t("nav.data"),ic:I.Act},{id:"a",l:t("nav.ai"),ic:I.Chat},{id:"t",l:t("nav.tips"),ic:I.Leaf},{id:"o",l:t("nav.docs"),ic:I.File},{id:"p",l:t("nav.profile"),ic:I.User}];
   const alertCount=INS.filter(i=>i.ur!=="low").length;
   const sendMsg=async(text)=>{if(!text.trim())return;setMsgs(p=>[...p,{r:"user",t:text}]);setInp("");
@@ -137,7 +137,8 @@ export default function App(){
     }catch(e){setMsgs(p=>[...p.slice(0,-1),{r:"ai",t:"Sorry, I couldn't process that request. Please try again.\n\n\u26a0\ufe0f *Always consult your doctor.*"}])}};
 
   /* HOME */
-  const Dash=()=>{const oob=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]<r.n||lat[k]>r.x);const ok=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]>=r.n&&lat[k]<=r.x);
+  const Dash=()=>{if(!lat)return <div className={`sy5 ${ac}`} style={{transition:"all 0.5s"}}>{isDemo&&<div style={{padding:"8px 14px",borderRadius:12,background:`linear-gradient(135deg,${C.wrnL},${C.wrnS}40)`,border:`1px solid ${C.wrnS}`,display:"flex",alignItems:"center",gap:8}}><I.Eye z={14} style={{color:C.wrn}}/><p style={{fontSize:11,fontWeight:600,color:C.wrn}}>{t("demo.banner")}</p></div>}<div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}><div><p style={{fontSize:12,color:C.tx3,fontWeight:500}}>{t("dash.greeting")}</p><h1 style={{fontSize:24,fontWeight:900,color:C.tx,letterSpacing:-0.5}}>{realProfile?.firstName||"User"}</h1></div></div><Cd style={{padding:20,textAlign:"center"}}><I.Act z={28} style={{color:C.pri,opacity:0.3,margin:"0 auto 8px"}}/><p style={{fontSize:14,fontWeight:700,color:C.tx}}>{t("docs.uploadTitle")}</p><p style={{fontSize:12,color:C.tx3,marginTop:4}}>Upload your first lab results or medical document to get started.</p></Cd></div>;
+  const oob=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]<r.n||lat[k]>r.x);const ok=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]>=r.n&&lat[k]<=r.x);
   return <div className={`sy5 ${ac}`} style={{transition:"all 0.5s"}}>
     {isDemo&&<div style={{padding:"8px 14px",borderRadius:12,background:`linear-gradient(135deg,${C.wrnL},${C.wrnS}40)`,border:`1px solid ${C.wrnS}`,display:"flex",alignItems:"center",gap:8}}><I.Eye z={14} style={{color:C.wrn}}/><p style={{fontSize:11,fontWeight:600,color:C.wrn}}>{t("demo.banner")}</p></div>}
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}><div><p style={{fontSize:12,color:C.tx3,fontWeight:500}}>{t("dash.greeting")}</p><h1 style={{fontSize:24,fontWeight:900,color:C.tx,letterSpacing:-0.5}}>{realProfile?.firstName||U.name.split(" ")[0]}</h1></div><div style={{display:"flex",alignItems:"center",gap:10}}><div style={{position:"relative",cursor:"pointer"}} onClick={()=>sT("a")}><I.Bell z={20} style={{color:C.tx3}}/>{alertCount>0&&<span style={{position:"absolute",top:-3,right:-3,width:15,height:15,borderRadius:8,background:C.dan,color:"white",fontSize:8,fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 2px 4px ${C.dan}40`}}>{alertCount}</span>}</div><div onClick={()=>sT("p")} style={{width:38,height:38,borderRadius:13,background:`linear-gradient(135deg,${C.pri},${C.pur})`,display:"flex",alignItems:"center",justifyContent:"center",color:"white",fontSize:13,fontWeight:800,cursor:"pointer",boxShadow:`0 4px 12px ${C.pri}35`}}>{realProfile?.firstName?realProfile.firstName.charAt(0).toUpperCase():"C"}{realProfile?.firstName?"":" M"}</div></div></div>
@@ -169,7 +170,8 @@ export default function App(){
   </div>;
 
   /* EVOLUTION */
-  const Evo=()=>{const r=RG[bio],v=lat[bio],f=BL[0][bio],cg=(((v-f)/f)*100).toFixed(1),lo=v<r.n,hi=v>r.x,oo=lo||hi,clr=oo?C.dan:C.suc;
+  const Evo=()=>{if(!lat||BL.length===0)return <div className={`sy4 ${ac}`} style={{transition:"all 0.5s"}}><h2 style={{fontSize:20,fontWeight:900,color:C.tx}}>{t("evolution.title")}</h2><Cd style={{padding:20,textAlign:"center"}}><p style={{fontSize:13,color:C.tx3}}>No lab data yet. Upload your first lab results to track your health evolution.</p></Cd></div>;
+  const r=RG[bio],v=lat[bio],f=BL[0][bio],cg=(((v-f)/f)*100).toFixed(1),lo=v<r.n,hi=v>r.x,oo=lo||hi,clr=oo?C.dan:C.suc;
   return <div className={`sy4 ${ac}`} style={{transition:"all 0.5s"}}>
     <h2 style={{fontSize:20,fontWeight:900,color:C.tx}}>Evoluci&oacute;n</h2>
     <div style={{display:"flex",gap:5,overflowX:"auto"}}>{Object.entries(RG).map(([k,rr])=>{const vv=lat[k],o2=vv<rr.n||vv>rr.x,at=bio===k;return <button key={k} onClick={()=>sB(k)} style={{flexShrink:0,padding:"6px 12px",borderRadius:10,fontSize:11,fontWeight:at?700:500,cursor:"pointer",background:at?C.pri:C.card,color:at?"white":C.tx2,border:`1px solid ${at?C.pri:o2?C.danS:C.brd}`,boxShadow:at?`0 2px 8px ${C.pri}35`:"none"}}>{o2&&!at&&<span style={{display:"inline-block",width:5,height:5,borderRadius:3,background:C.dan,marginRight:3}}/>}{rr.l}</button>})}</div>
