@@ -34,3 +34,7 @@ dist-ssr
 
 # Claude local settings
 .claude/settings.local.json
+
+# Capacitor native platforms (generated)
+android/
+ios/

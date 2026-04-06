@@ -1,0 +1,20 @@
+{
+  "appId": "com.healthgen.app",
+  "appName": "HealthGen",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#F4F5F9",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#4F6AE8"
+    }
+  }
+}
