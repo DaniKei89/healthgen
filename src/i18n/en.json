@@ -1,0 +1,209 @@
+{
+  "nav": {
+    "home": "Home",
+    "family": "Family",
+    "data": "Data",
+    "ai": "AI",
+    "tips": "Tips",
+    "docs": "Docs",
+    "profile": "Profile"
+  },
+  "common": {
+    "close": "Close",
+    "add": "Add",
+    "upload": "Upload",
+    "share": "Share",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "ok": "OK",
+    "years": "years",
+    "demo": "Demo",
+    "loading": "Loading...",
+    "all": "All",
+    "copied": "Copied",
+    "copyCode": "Copy code",
+    "blockchain": "BLOCKCHAIN",
+    "logout": "Log out"
+  },
+  "demo": {
+    "banner": "Demo mode — sample data. Add your real data to personalize."
+  },
+  "dash": {
+    "greeting": "Good morning",
+    "wearables": "Wearables",
+    "wearablesLive": "Today, live",
+    "aiAlerts": "{{count}} AI alerts",
+    "alertsDetail": "Iron · Vit C · Cholesterol",
+    "needAttention": "Need attention",
+    "inRange": "In range",
+    "seeAll": "All →",
+    "family": "Family",
+    "familyTree": "Tree →",
+    "blockchainId": "Personal Blockchain ID",
+    "low": "Low",
+    "high": "High",
+    "normal": "Normal"
+  },
+  "vitals": {
+    "height": "Height",
+    "weight": "Weight",
+    "pulse": "Pulse",
+    "bloodPressure": "BP",
+    "spo2": "SpO2",
+    "blood": "Blood"
+  },
+  "wearables": {
+    "stepsToday": "Steps today",
+    "calories": "Calories",
+    "sleep": "Sleep",
+    "spo2": "SpO2",
+    "hrv": "HRV",
+    "standing": "Standing"
+  },
+  "family": {
+    "title": "Family Tree",
+    "addMember": "Add",
+    "grandparents": "Grandparents",
+    "parents": "Parents",
+    "you": "You",
+    "children": "Children",
+    "hereditaryPatterns": "Hereditary Patterns",
+    "noConditions": "No conditions",
+    "addChild": "Child",
+    "addChildDesc": "From newborn. Create their record from day 1.",
+    "addParent": "Parent",
+    "addParentDesc": "Parents' data for hereditary patterns.",
+    "addSibling": "Sibling",
+    "addSiblingDesc": "Shares genetic patterns.",
+    "addFamilyTitle": "Add Family Member",
+    "addFamilySubtitle": "AI will analyze hereditary patterns",
+    "transferNote": "18+ Transfer:",
+    "transferDesc": "At 18, transfer the complete record to their own HealthGen account."
+  },
+  "familyRelations": {
+    "paternalGrandfather": "Pat. Grandfather",
+    "paternalGrandmother": "Pat. Grandmother",
+    "maternalGrandfather": "Mat. Grandfather",
+    "maternalGrandmother": "Mat. Grandmother",
+    "father": "Father",
+    "mother": "Mother",
+    "you": "You",
+    "sister": "Sister",
+    "brother": "Brother",
+    "daughter": "Daughter",
+    "son": "Son"
+  },
+  "evolution": {
+    "title": "Evolution",
+    "range": "Range"
+  },
+  "labs": {
+    "iron": "Iron",
+    "vitC": "Vit C",
+    "redCells": "Red Cells",
+    "cholesterol": "Cholesterol",
+    "glucose": "Glucose",
+    "hemoglobin": "Hemoglobin",
+    "weightLabel": "Weight"
+  },
+  "chat": {
+    "title": "AI Assistant",
+    "subtitle": "Informational · Always consult your doctor",
+    "placeholder": "Ask about your health...",
+    "aiLabel": "HealthGen AI"
+  },
+  "tips": {
+    "title": "Recommendations",
+    "disclaimer": "Suggestions based on your data.",
+    "consultDoctor": "Always consult your doctor.",
+    "diet": "🥗 Diet",
+    "exercise": "🏃 Exercise",
+    "natural": "🌿 Natural",
+    "medication": "💊 Medication"
+  },
+  "docs": {
+    "title": "Documents",
+    "uploadTitle": "Upload documents",
+    "uploadSubtitle": "AI extracts data automatically",
+    "uploading": "Uploading... {{progress}}%",
+    "selectFile": "Select file",
+    "uploadDocTitle": "Upload Document",
+    "uploaded": "Uploaded",
+    "analyzing": "Analyzing...",
+    "types": {
+      "analytics": "Lab work",
+      "xray": "X-ray",
+      "mri": "MRI/CT",
+      "report": "Report",
+      "prescription": "Prescription",
+      "ophthalmology": "Ophthalm.",
+      "dermatology": "Dermat.",
+      "other": "Other"
+    }
+  },
+  "profile": {
+    "blockchainId": "Blockchain ID",
+    "connectedDevices": "Connected devices",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "allergies": "Allergies",
+    "conditions": "Conditions",
+    "vaccines": "Vaccines",
+    "medication": "Medication",
+    "shareDoctor": "Share with doctor",
+    "shareDoctorDesc": "Temporary OTP code",
+    "transferChild": "Transfer to child (18+)",
+    "transferChildDesc": "Complete history transfer",
+    "addFamily": "Add family member",
+    "addFamilyDesc": "Children, parents or siblings",
+    "exportHistory": "Export history",
+    "exportHistoryDesc": "PDF, FHIR or HL7",
+    "dataProtected": "Data protected",
+    "dataProtectedDesc": "E2E Encryption · Blockchain · GDPR · HIPAA",
+    "bmi": "BMI"
+  },
+  "otp": {
+    "title": "Share with Doctor",
+    "yourId": "Your ID:",
+    "verificationCode": "Temporary verification code",
+    "secondsRemaining": "seconds remaining",
+    "instructions": "The doctor enters your Blockchain ID + this 6-digit code to temporarily access your record. Access expires automatically."
+  },
+  "smartTips": {
+    "connectDevice": "Connect a device",
+    "connectDeviceDesc": "Sync your wearable for real-time data and better recommendations.",
+    "familyHistory": "Complete your family history",
+    "familyHistoryDesc": "Record data from parents, siblings and children to detect hereditary patterns.",
+    "uploadDocs": "Upload medical documents",
+    "uploadDocsDesc": "Centralize your lab work, reports and prescriptions in one secure place."
+  },
+  "storage": {
+    "fileTooLarge": "File exceeds the 25MB limit",
+    "invalidType": "Only PDF, JPEG and PNG files are accepted",
+    "uploadError": "Upload error: {{message}}"
+  },
+  "onboarding": {
+    "welcome": "Your digital health, protected with the best technology",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "email": "your@email.com",
+    "password": "Password",
+    "continueGoogle": "Continue with Google",
+    "protected": "Your health, protected",
+    "pwRules": {
+      "length": "Minimum 12 characters",
+      "upper": "1 uppercase letter",
+      "number": "1 number",
+      "special": "1 special character (!@#$...)"
+    },
+    "steps": {
+      "personalData": "Personal data",
+      "healthStatus": "Health status",
+      "familyHistory": "Family history",
+      "integrations": "Integrations",
+      "permissions": "Permissions",
+      "complete": "Complete"
+    }
+  }
+}

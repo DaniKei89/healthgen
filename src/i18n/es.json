@@ -1,0 +1,209 @@
+{
+  "nav": {
+    "home": "Home",
+    "family": "Familia",
+    "data": "Datos",
+    "ai": "IA",
+    "tips": "Tips",
+    "docs": "Docs",
+    "profile": "Perfil"
+  },
+  "common": {
+    "close": "Cerrar",
+    "add": "Añadir",
+    "upload": "Subir",
+    "share": "Compartir",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "ok": "OK",
+    "years": "años",
+    "demo": "Demo",
+    "loading": "Cargando...",
+    "all": "Todo",
+    "copied": "Copiado",
+    "copyCode": "Copiar código",
+    "blockchain": "BLOCKCHAIN",
+    "logout": "Cerrar sesión"
+  },
+  "demo": {
+    "banner": "Modo demo — datos de ejemplo. Añade tus datos reales para personalizar."
+  },
+  "dash": {
+    "greeting": "Buenos días",
+    "wearables": "Wearables",
+    "wearablesLive": "Hoy, en directo",
+    "aiAlerts": "{{count}} alertas IA",
+    "alertsDetail": "Hierro · Vit C · Colesterol",
+    "needAttention": "Requieren atención",
+    "inRange": "En rango",
+    "seeAll": "Todo →",
+    "family": "Familia",
+    "familyTree": "Árbol →",
+    "blockchainId": "ID Blockchain Personal",
+    "low": "Bajo",
+    "high": "Alto",
+    "normal": "Normal"
+  },
+  "vitals": {
+    "height": "Altura",
+    "weight": "Peso",
+    "pulse": "Pulso",
+    "bloodPressure": "Tensión",
+    "spo2": "SpO2",
+    "blood": "Sangre"
+  },
+  "wearables": {
+    "stepsToday": "Pasos hoy",
+    "calories": "Calorías",
+    "sleep": "Sueño",
+    "spo2": "SpO2",
+    "hrv": "VFC",
+    "standing": "De pie"
+  },
+  "family": {
+    "title": "Árbol Familiar",
+    "addMember": "Añadir",
+    "grandparents": "Abuelos",
+    "parents": "Padres",
+    "you": "Tú",
+    "children": "Hijos",
+    "hereditaryPatterns": "Patrones Hereditarios",
+    "noConditions": "Sin condiciones",
+    "addChild": "Hijo/a",
+    "addChildDesc": "Desde recién nacido. Crea su historial desde el día 1.",
+    "addParent": "Padre/Madre",
+    "addParentDesc": "Datos de padres para patrones hereditarios.",
+    "addSibling": "Hermano/a",
+    "addSiblingDesc": "Comparte patrones genéticos.",
+    "addFamilyTitle": "Añadir Familiar",
+    "addFamilySubtitle": "La IA analizará patrones hereditarios",
+    "transferNote": "Transferencia 18+:",
+    "transferDesc": "Al cumplir 18, transfiere el historial completo a su propia cuenta HealthGen."
+  },
+  "familyRelations": {
+    "paternalGrandfather": "Abuelo Pat.",
+    "paternalGrandmother": "Abuela Pat.",
+    "maternalGrandfather": "Abuelo Mat.",
+    "maternalGrandmother": "Abuela Mat.",
+    "father": "Padre",
+    "mother": "Madre",
+    "you": "Tú",
+    "sister": "Hermana",
+    "brother": "Hermano",
+    "daughter": "Hija",
+    "son": "Hijo"
+  },
+  "evolution": {
+    "title": "Evolución",
+    "range": "Rango"
+  },
+  "labs": {
+    "iron": "Hierro",
+    "vitC": "Vit C",
+    "redCells": "Glób. Rojos",
+    "cholesterol": "Colesterol",
+    "glucose": "Glucosa",
+    "hemoglobin": "Hemoglobina",
+    "weightLabel": "Peso"
+  },
+  "chat": {
+    "title": "Asistente IA",
+    "subtitle": "Informativo · Consulta siempre tu médico",
+    "placeholder": "Pregunta sobre tu salud...",
+    "aiLabel": "HealthGen IA"
+  },
+  "tips": {
+    "title": "Recomendaciones",
+    "disclaimer": "Sugerencias basadas en tus datos.",
+    "consultDoctor": "Consulta siempre tu médico.",
+    "diet": "🥗 Dieta",
+    "exercise": "🏃 Ejercicio",
+    "natural": "🌿 Natural",
+    "medication": "💊 Medicación"
+  },
+  "docs": {
+    "title": "Documentos",
+    "uploadTitle": "Subir documentos",
+    "uploadSubtitle": "IA extrae datos automáticamente",
+    "uploading": "Subiendo... {{progress}}%",
+    "selectFile": "Seleccionar archivo",
+    "uploadDocTitle": "Subir Documento",
+    "uploaded": "Subido",
+    "analyzing": "Analizando...",
+    "types": {
+      "analytics": "Analítica",
+      "xray": "Radiografía",
+      "mri": "MRI/TAC",
+      "report": "Informe",
+      "prescription": "Receta",
+      "ophthalmology": "Oftalm.",
+      "dermatology": "Dermat.",
+      "other": "Otro"
+    }
+  },
+  "profile": {
+    "blockchainId": "Blockchain ID",
+    "connectedDevices": "Dispositivos conectados",
+    "connected": "Conectado",
+    "disconnected": "Desconectado",
+    "allergies": "Alergias",
+    "conditions": "Condiciones",
+    "vaccines": "Vacunas",
+    "medication": "Medicación",
+    "shareDoctor": "Compartir con médico",
+    "shareDoctorDesc": "Código OTP temporal",
+    "transferChild": "Transferir a hijo/a (18+)",
+    "transferChildDesc": "Traspaso completo de historial",
+    "addFamily": "Añadir familiar",
+    "addFamilyDesc": "Hijos, padres o hermanos",
+    "exportHistory": "Exportar historial",
+    "exportHistoryDesc": "PDF, FHIR o HL7",
+    "dataProtected": "Datos protegidos",
+    "dataProtectedDesc": "Cifrado E2E · Blockchain · GDPR · HIPAA",
+    "bmi": "IMC"
+  },
+  "otp": {
+    "title": "Compartir con Médico",
+    "yourId": "Tu ID:",
+    "verificationCode": "Código de verificación temporal",
+    "secondsRemaining": "segundos restantes",
+    "instructions": "El médico introduce tu Blockchain ID + este código de 6 dígitos para acceder temporalmente a tu historial. El acceso expira automáticamente."
+  },
+  "smartTips": {
+    "connectDevice": "Conecta un dispositivo",
+    "connectDeviceDesc": "Sincroniza tu wearable para obtener datos en tiempo real y mejores recomendaciones.",
+    "familyHistory": "Completa tu historial familiar",
+    "familyHistoryDesc": "Registra datos de padres, hermanos e hijos para detectar patrones hereditarios.",
+    "uploadDocs": "Sube documentos médicos",
+    "uploadDocsDesc": "Centraliza tus analíticas, informes y recetas en un solo lugar seguro."
+  },
+  "storage": {
+    "fileTooLarge": "El archivo supera el límite de 25MB",
+    "invalidType": "Solo se aceptan archivos PDF, JPEG y PNG",
+    "uploadError": "Error al subir: {{message}}"
+  },
+  "onboarding": {
+    "welcome": "Tu salud digital, protegida con la mejor tecnología",
+    "signIn": "Iniciar sesión",
+    "createAccount": "Crear cuenta",
+    "email": "tu@email.com",
+    "password": "Contraseña",
+    "continueGoogle": "Continuar con Google",
+    "protected": "Tu salud, protegida",
+    "pwRules": {
+      "length": "Mínimo 12 caracteres",
+      "upper": "1 letra mayúscula",
+      "number": "1 número",
+      "special": "1 carácter especial (!@#$...)"
+    },
+    "steps": {
+      "personalData": "Datos personales",
+      "healthStatus": "Estado de salud",
+      "familyHistory": "Historial familiar",
+      "integrations": "Integraciones",
+      "permissions": "Permisos",
+      "complete": "Completado"
+    }
+  }
+}

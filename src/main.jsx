@@ -1,6 +1,7 @@
 import { StrictMode, useState, useEffect, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+import './i18n' // Initialize i18n before anything else
 import { AuthProvider, useAuth } from './AuthContext.jsx'
 
 // Lazy load heavy components — only loads what's needed

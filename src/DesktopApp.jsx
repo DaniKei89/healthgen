@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "./AuthContext";
 import { useUserData } from "./hooks/useUserData";
 import { RG } from "./data/referenceRanges";
@@ -93,6 +94,7 @@ const DOC_TYPES=[{l:"Analítica",e:"🩸"},{l:"Radiografía",e:"🦴"},{l:"MRI/T
 
 /* ═══ DESKTOP APP ═══ */
 export default function DesktopApp(){
+  const{t,i18n}=useTranslation();
   const{onboardingData,handleLogout,user}=useAuth();
   const userData=useUserData();
   const{profile:realProfile,documents:realDocs,isEmpty,isDemo,demo}=userData;
