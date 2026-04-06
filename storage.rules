@@ -1,0 +1,34 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ═══ USER DOCUMENTS ═══
+    // Users can only access files in their own directory
+    match /users/{userId}/{allPaths=**} {
+      // Only the file owner can read
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // Only the file owner can upload, with restrictions
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    // Max file size: 25MB
+                    && request.resource.size < 25 * 1024 * 1024
+                    // Only allow specific file types
+                    && (request.resource.contentType.matches('application/pdf')
+                        || request.resource.contentType.matches('image/jpeg')
+                        || request.resource.contentType.matches('image/png'));
+
+      // Allow delete own files
+      allow delete: if request.auth != null && request.auth.uid == userId;
+
+      // No updates to existing files (upload new version instead)
+      allow update: if false;
+    }
+
+    // ═══ DENY ALL OTHER ACCESS ═══
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
