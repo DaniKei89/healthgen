@@ -197,6 +197,9 @@
     "resetSent": "✓ Email de recuperación enviado. Revisa tu bandeja de entrada.",
     "enterEmailFirst": "Introduce tu email primero",
     "securityFooter": "Datos cifrados E2E · GDPR · HIPAA",
+    "searchAllergies": "Escribe para buscar alergias...",
+    "searchMeds": "Escribe para buscar medicamentos...",
+    "searchConditions": "Escribe para buscar condiciones...",
     "pwRules": {
       "length": "Mínimo 12 caracteres",
       "upper": "1 letra mayúscula",

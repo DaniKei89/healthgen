@@ -197,6 +197,9 @@
     "resetSent": "✓ Recovery email sent. Check your inbox.",
     "enterEmailFirst": "Enter your email first",
     "securityFooter": "E2E Encrypted · GDPR · HIPAA",
+    "searchAllergies": "Type to search allergies...",
+    "searchMeds": "Type to search medications...",
+    "searchConditions": "Type to search conditions...",
     "pwRules": {
       "length": "Minimum 12 characters",
       "upper": "1 uppercase letter",

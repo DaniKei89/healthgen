@@ -215,14 +215,18 @@ export function useUserData() {
     return generateTips(labResults, profile, RG);
   }, [labResults, profile]);
 
-  // Determine if we're in demo mode (no real data at all)
+  // Determine data state
   const isEmpty = {
     profile: !profile,
     labs: labResults.length === 0,
     family: familyMembers.length === 0,
     docs: documents.length === 0,
   };
-  const isDemo = isEmpty.profile && isEmpty.labs && isEmpty.family && isEmpty.docs;
+
+  // Demo mode: ONLY for the designated demo account
+  const DEMO_EMAIL = "dani_278@hotmail.com";
+  const isDemoAccount = user?.email === DEMO_EMAIL;
+  const isDemo = isDemoAccount && isEmpty.profile && isEmpty.labs && isEmpty.family && isEmpty.docs;
 
   return {
     profile: displayProfile,

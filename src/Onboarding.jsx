@@ -52,6 +52,8 @@ const Ring = ({ pct, color, sz=44, sw=4 }) => {
 /* ═══ DATA ═══ */
 const BLOOD_TYPES = ["A+","A-","B+","B-","AB+","AB-","O+","O-","No lo sé"];
 
+import { ALLERGIES as ALLERGY_OPTIONS, MEDICATIONS as MED_OPTIONS, CONDITIONS as CONDITION_OPTIONS, COUNTRIES } from "./data/medicalOptions";
+
 const FAMILY_CONDITIONS = [
   "Diabetes","Hipertensión","Cáncer","Enf. cardíaca","Colesterol alto",
   "Asma","Alzheimer","Artritis","Depresión","Obesidad","Tiroides","Ninguna",
@@ -68,7 +70,48 @@ const INTEGRATIONS = [
   { id:"withings", name:"Withings", icon:"⚖️", desc:"Peso, tensión" },
 ];
 
-const COUNTRIES = ["España","México","Argentina","Colombia","Chile","Perú","Ecuador","Venezuela","Uruguay","Bolivia","Paraguay","Guatemala","Costa Rica","Panamá","Cuba","Rep. Dominicana","Honduras","El Salvador","Nicaragua","Estados Unidos","Otro"];
+/* ═══ AUTOCOMPLETE COMPONENT ═══ */
+const AutocompleteInput = ({ options, selected, onSelect, onRemove, placeholder, color }) => {
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
+  const C = { pri:"#4F6AE8",priL:"#EEF1FD",priS:"#D0D8FA",brd:"#DFE2EB",bg:"#F4F5F9",tx:"#0F1117",tx2:"#555970",tx3:"#8E93A8",card:"#FFFFFF",dan:"#E5484D" };
+  const filtered = query.length >= 1 ? options.filter(o => o.toLowerCase().includes(query.toLowerCase()) && !selected.includes(o)).slice(0, 6) : [];
+  return (
+    <div style={{ marginTop: 8, position: "relative" }}>
+      {/* Selected tags */}
+      {selected.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 8 }}>
+          {selected.map(item => (
+            <span key={item} style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600, background: color || C.priL, color: C.pri, border: `1px solid ${C.priS}` }}>
+              {item}
+              <button onClick={() => onRemove(item)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontSize: 14, color: C.tx3, lineHeight: 1 }}>×</button>
+            </span>
+          ))}
+        </div>
+      )}
+      {/* Input */}
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setTimeout(() => setFocused(false), 200)}
+        onKeyDown={(e) => { if (e.key === "Enter" && query.trim()) { e.preventDefault(); if (filtered.length > 0) { onSelect(filtered[0]); } else { onSelect(query.trim()); } setQuery(""); } }}
+        placeholder={placeholder}
+        style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${focused ? C.pri : C.brd}`, background: C.card, fontSize: 13, color: C.tx, outline: "none", fontFamily: "'Plus Jakarta Sans',-apple-system,sans-serif", transition: "border-color 0.2s" }}
+      />
+      {/* Dropdown */}
+      {focused && filtered.length > 0 && (
+        <div style={{ position: "absolute", left: 0, right: 0, top: "100%", marginTop: 4, background: C.card, borderRadius: 12, border: `1px solid ${C.brd}`, boxShadow: "0 8px 24px rgba(0,0,0,0.08)", zIndex: 50, maxHeight: 200, overflowY: "auto" }}>
+          {filtered.map(opt => (
+            <button key={opt} onMouseDown={(e) => { e.preventDefault(); onSelect(opt); setQuery(""); }} style={{ width: "100%", padding: "10px 14px", border: "none", background: "none", cursor: "pointer", fontSize: 13, color: C.tx, textAlign: "left", fontFamily: "'Plus Jakarta Sans',-apple-system,sans-serif", transition: "background 0.1s" }} onMouseEnter={(e) => e.target.style.background = C.bg} onMouseLeave={(e) => e.target.style.background = "none"}>
+              {opt}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 /* ═══ PASSWORD VALIDATION ═══ */
 const pwRules = [
@@ -108,10 +151,13 @@ export default function Onboarding() {
   // Step 2: Health status
   const [hasAllergies, setHasAllergies] = useState("");
   const [allergiesText, setAllergiesText] = useState("");
+  const [allergiesList, setAllergiesList] = useState([]);
   const [hasMeds, setHasMeds] = useState("");
   const [medsText, setMedsText] = useState("");
+  const [medsList, setMedsList] = useState([]);
   const [hasConditions, setHasConditions] = useState("");
   const [conditionsText, setConditionsText] = useState("");
+  const [conditionsList, setConditionsList] = useState([]);
   const [bloodType, setBloodType] = useState("");
 
   // Step 3: Family history
@@ -562,8 +608,7 @@ export default function Onboarding() {
           <label style={labelStyle}>¿Tienes alergias conocidas?</label>
           <TriToggle value={hasAllergies} onChange={setHasAllergies}/>
           {hasAllergies==="Sí" && (
-            <input value={allergiesText} onChange={(e)=>setAllergiesText(e.target.value)} placeholder="Ej: polen, mariscos, penicilina..."
-              style={{...inputStyle, marginTop:8}} onFocus={(e)=>(e.target.style.borderColor=C.pri)} onBlur={(e)=>(e.target.style.borderColor=C.brd)}/>
+            <AutocompleteInput options={ALLERGY_OPTIONS} selected={allergiesList} onSelect={(v)=>{setAllergiesList(p=>[...p,v]);setAllergiesText([...allergiesList,v].join(", "))}} onRemove={(v)=>{const next=allergiesList.filter(x=>x!==v);setAllergiesList(next);setAllergiesText(next.join(", "))}} placeholder={t("onboarding.searchAllergies")} />
           )}
         </div>
         {/* Medications */}
@@ -571,8 +616,7 @@ export default function Onboarding() {
           <label style={labelStyle}>¿Tomas medicación regular?</label>
           <TriToggle value={hasMeds} onChange={setHasMeds}/>
           {hasMeds==="Sí" && (
-            <input value={medsText} onChange={(e)=>setMedsText(e.target.value)} placeholder="Ej: ibuprofeno, omeprazol..."
-              style={{...inputStyle, marginTop:8}} onFocus={(e)=>(e.target.style.borderColor=C.pri)} onBlur={(e)=>(e.target.style.borderColor=C.brd)}/>
+            <AutocompleteInput options={MED_OPTIONS} selected={medsList} onSelect={(v)=>{setMedsList(p=>[...p,v]);setMedsText([...medsList,v].join(", "))}} onRemove={(v)=>{const next=medsList.filter(x=>x!==v);setMedsList(next);setMedsText(next.join(", "))}} placeholder={t("onboarding.searchMeds")} />
           )}
         </div>
         {/* Conditions */}
@@ -580,8 +624,7 @@ export default function Onboarding() {
           <label style={labelStyle}>¿Tienes condiciones diagnosticadas?</label>
           <TriToggle value={hasConditions} onChange={setHasConditions}/>
           {hasConditions==="Sí" && (
-            <input value={conditionsText} onChange={(e)=>setConditionsText(e.target.value)} placeholder="Ej: diabetes, asma, hipertensión..."
-              style={{...inputStyle, marginTop:8}} onFocus={(e)=>(e.target.style.borderColor=C.pri)} onBlur={(e)=>(e.target.style.borderColor=C.brd)}/>
+            <AutocompleteInput options={CONDITION_OPTIONS} selected={conditionsList} onSelect={(v)=>{setConditionsList(p=>[...p,v]);setConditionsText([...conditionsList,v].join(", "))}} onRemove={(v)=>{const next=conditionsList.filter(x=>x!==v);setConditionsList(next);setConditionsText(next.join(", "))}} placeholder={t("onboarding.searchConditions")} />
           )}
         </div>
         {/* Blood type */}

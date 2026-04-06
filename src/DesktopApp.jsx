@@ -102,13 +102,13 @@ export default function DesktopApp(){
   // Resolve data: use real data when available, demo data as fallback
   const U=realProfile||demo.profile;
   const WEAR=demo.wear;
-  const TM=isEmpty.family?demo.family:userData.familyMembers;
-  const CN=isEmpty.family?demo.connections:userData.connections;
-  const HR=isEmpty.family?demo.risks:userData.hereditaryRisks;
-  const BL=isEmpty.labs?demo.labs:userData.labResults;
-  const INS=isEmpty.labs?demo.insights:userData.insights;
+  const TM=isDemo&&isEmpty.family?demo.family:userData.familyMembers;
+  const CN=isDemo&&isEmpty.family?demo.connections:userData.connections;
+  const HR=isDemo&&isEmpty.family?demo.risks:userData.hereditaryRisks;
+  const BL=isDemo&&isEmpty.labs?demo.labs:userData.labResults;
+  const INS=isDemo&&isEmpty.labs?demo.insights:userData.insights;
   const DC_INIT=demo.docsDesktop;
-  const TIPS_DATA=demo.tips.map(t=>({...t,ic:IC_MAP[t.icKey]||I.Leaf}));
+  const TIPS_DATA=isDemo?demo.tips.map(t=>({...t,ic:IC_MAP[t.icKey]||I.Leaf})):userData.tips.map(t=>({...t,ic:IC_MAP[t.icKey||"Leaf"]||I.Leaf}));
   const CHAT_INIT=demo.chatInit;
   const AI_R=demo.aiResponses;
   const[tab,sT]=useState("d");
