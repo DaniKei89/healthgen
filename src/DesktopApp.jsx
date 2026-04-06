@@ -5,6 +5,7 @@ import { useUserData } from "./hooks/useUserData";
 import { RG } from "./data/referenceRanges";
 import { uploadDocument, validateFile, formatFileSize, getEmojiForType } from "./services/storage";
 import { addDocument, updateDocument } from "./services/firestore";
+import { chatWithAI, analyzeDocument, isAIAvailable } from "./services/ai";
 
 /* ═══ ICONS ═══ */
 const S=p=>(<svg width={p.z||20} height={p.z||20} viewBox="0 0 24 24" fill="none" stroke={p.sk||"currentColor"} strokeWidth={p.sw||1.7} strokeLinecap="round" strokeLinejoin="round" style={p.style}>{p.children}</svg>);
@@ -144,7 +145,15 @@ export default function DesktopApp(){
   const tabs=[{id:"d",l:"Home",ic:I.Heart},{id:"f",l:"Familia",ic:I.DNA},{id:"e",l:"Datos",ic:I.Act},{id:"a",l:"IA",ic:I.Chat},{id:"t",l:"Tips",ic:I.Leaf},{id:"o",l:"Docs",ic:I.File},{id:"p",l:"Perfil",ic:I.User}];
   const alertCount=INS.filter(i=>i.ur!=="low").length;
 
-  const sendMsg=(text)=>{if(!text.trim())return;setMsgs(p=>[...p,{r:"user",t:text}]);setInp("");setTimeout(()=>{const resp=AI_R[text]||`Analizo tu pregunta sobre "${text}"...\n\nBasado en tu perfil, te recomiendo consultar con tu médico para una valoración personalizada.\n\n⚠️ *Información orientativa.*`;setMsgs(p=>[...p,{r:"ai",t:resp},{r:"sug",t:null,opts:["¿Por qué baja mi hierro?","¿Riesgos para Sofía?","¿Qué comer esta semana?","¿Mi sueño es suficiente?"]}])},700)};
+  const sendMsg=async(text)=>{if(!text.trim())return;setMsgs(p=>[...p,{r:"user",t:text}]);setInp("");
+    setMsgs(p=>[...p,{r:"ai",t:"..."}]);
+    try{
+      const userContext={profile:U,labResults:BL.length>0?{latest:BL[BL.length-1],history:BL}:null,family:TM.length>0?TM.map(m=>({name:m.nm,relation:m.rl,conditions:m.co})):null,wearables:WEAR};
+      let resp;
+      if(isAIAvailable()){resp=await chatWithAI(text,userContext)}
+      else{resp=AI_R[text]||`I analyzed your question about "${text}".\n\nBased on your profile, I recommend consulting with your doctor.\n\n\u26a0\ufe0f *Informational only. Always consult your doctor.*`}
+      setMsgs(p=>[...p.slice(0,-1),{r:"ai",t:resp},{r:"sug",t:null,opts:demo.chatSuggestions}]);
+    }catch(e){setMsgs(p=>[...p.slice(0,-1),{r:"ai",t:"Sorry, I couldn't process that. Please try again.\n\n\u26a0\ufe0f *Always consult your doctor.*"}])}};
 
   /* ═══ FILE UPLOAD HANDLER ═══ */
   const handleFiles=async(files)=>{

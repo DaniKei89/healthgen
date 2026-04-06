@@ -5,6 +5,7 @@ import { useUserData } from "./hooks/useUserData";
 import { RG } from "./data/referenceRanges";
 import { uploadDocument, validateFile, formatFileSize, getEmojiForType } from "./services/storage";
 import { addDocument, updateDocument } from "./services/firestore";
+import { chatWithAI, analyzeDocument, isAIAvailable } from "./services/ai";
 
 /* ═══ ICONS ═══ */
 const S=p=>(<svg width={p.z||20} height={p.z||20} viewBox="0 0 24 24" fill="none" stroke={p.sk||"currentColor"} strokeWidth={p.sw||1.7} strokeLinecap="round" strokeLinejoin="round" style={p.style}>{p.children}</svg>);
@@ -121,7 +122,17 @@ export default function App(){
   const mem=TM.find(m=>m.id===fam),lat=BL[BL.length-1],ac=an?"opacity-100 translate-y-0":"opacity-0 translate-y-3";
   const tabs=[{id:"d",l:t("nav.home"),ic:I.Heart},{id:"f",l:t("nav.family"),ic:I.DNA},{id:"e",l:t("nav.data"),ic:I.Act},{id:"a",l:t("nav.ai"),ic:I.Chat},{id:"t",l:t("nav.tips"),ic:I.Leaf},{id:"o",l:t("nav.docs"),ic:I.File},{id:"p",l:t("nav.profile"),ic:I.User}];
   const alertCount=INS.filter(i=>i.ur!=="low").length;
-  const sendMsg=(text)=>{if(!text.trim())return;setMsgs(p=>[...p,{r:"user",t:text}]);setInp("");setTimeout(()=>{const resp=AI_R[text]||`Analizo tu pregunta sobre "${text}"...\n\nBasado en tu perfil, te recomiendo consultar con tu m\u00e9dico para una valoraci\u00f3n personalizada.\n\n\u26a0\ufe0f *Informaci\u00f3n orientativa.*`;setMsgs(p=>[...p,{r:"ai",t:resp},{r:"sug",t:null,opts:["\u00bfPor qu\u00e9 baja mi hierro?","\u00bfRiesgos para Sof\u00eda?","\u00bfQu\u00e9 comer esta semana?","\u00bfMi sue\u00f1o es suficiente?"]}])},700)};
+  const sendMsg=async(text)=>{if(!text.trim())return;setMsgs(p=>[...p,{r:"user",t:text}]);setInp("");
+    // Show typing indicator
+    setMsgs(p=>[...p,{r:"ai",t:"..."}]);
+    try{
+      const userContext={profile:U,labResults:BL.length>0?{latest:BL[BL.length-1],history:BL}:null,family:TM.length>0?TM.map(m=>({name:m.nm,relation:m.rl,conditions:m.co})):null,wearables:WEAR};
+      // Try real AI first, fall back to demo responses
+      let resp;
+      if(isAIAvailable()){resp=await chatWithAI(text,userContext)}
+      else{resp=AI_R[text]||`I analyzed your question about "${text}".\n\nBased on your profile, I recommend consulting with your doctor for a personalized assessment.\n\n\u26a0\ufe0f *Informational only. Always consult your doctor.*`}
+      setMsgs(p=>[...p.slice(0,-1),{r:"ai",t:resp},{r:"sug",t:null,opts:demo.chatSuggestions}]);
+    }catch(e){setMsgs(p=>[...p.slice(0,-1),{r:"ai",t:"Sorry, I couldn't process that request. Please try again.\n\n\u26a0\ufe0f *Always consult your doctor.*"}])}};
 
   /* HOME */
   const Dash=()=>{const oob=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]<r.n||lat[k]>r.x);const ok=Object.entries(RG).filter(([k])=>k!=="wt").filter(([k,r])=>lat[k]>=r.n&&lat[k]<=r.x);
@@ -193,7 +204,10 @@ export default function App(){
     <Cd style={{padding:20,textAlign:"center",cursor:"pointer",border:`2px dashed ${C.priS}`,background:C.priL}} onClick={()=>sM("upload")}><I.Scan z={26} style={{color:C.pri,opacity:0.4,margin:"0 auto 6px"}}/><p style={{fontSize:13,fontWeight:700,color:C.tx}}>Subir documentos</p><p style={{fontSize:11,color:C.tx3,marginTop:3}}>IA extrae datos autom&aacute;ticamente</p></Cd>
     {uploading&&<Cd style={{padding:"12px 14px"}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><I.Scan z={14} style={{color:C.pri}}/><span style={{fontSize:12,fontWeight:700,color:C.pri}}>Subiendo... {uploadProg}%</span></div><RB pct={uploadProg} color={C.pri}/></Cd>}
     {realDocs.length>0?realDocs.map(d=><Cd key={d.id} style={{padding:"10px 14px"}}><div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:17,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",borderRadius:10,background:C.bg}}>{d.emoji||"📄"}</span><div style={{flex:1,minWidth:0}}><p style={{fontSize:12.5,fontWeight:700,color:C.tx,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{d.name}</p><div style={{display:"flex",alignItems:"center",gap:5,marginTop:2}}><span style={{fontSize:10.5,color:C.tx3}}>{d.date||"—"}</span>{d.size&&<span style={{fontSize:10,color:C.tx3}}>{d.size}</span>}{d.aiStatus==="complete"?<Bd s="g" t="IA ✓"/>:d.aiStatus==="analyzing"?<Bd s="b" t="Analizando..."/>:<Bd s="b" t="Subido"/>}</div></div></div></Cd>):DC.map(d=><Cd key={d.id} style={{padding:"10px 14px"}}><div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:17,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",borderRadius:10,background:C.bg}}>{d.e}</span><div style={{flex:1,minWidth:0}}><p style={{fontSize:12.5,fontWeight:700,color:C.tx,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{d.n}</p><div style={{display:"flex",alignItems:"center",gap:5,marginTop:2}}><span style={{fontSize:10.5,color:C.tx3}}>{d.dt}</span><Bd s="b" t="Demo"/></div></div></div></Cd>)}
-    <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png" style={{display:"none"}} onChange={async(e)=>{const file=e.target.files?.[0];if(!file||!user)return;const v=validateFile(file);if(!v.valid){alert(v.error);return;}setUploading(true);setUploadProg(0);try{const{path,downloadUrl}=await uploadDocument(user.uid,file,(p)=>setUploadProg(p));const now=new Date();await addDocument(user.uid,{name:file.name.replace(/\.[^.]+$/,""),emoji:getEmojiForType(uploadType||"Otro"),type:uploadType||"Otro",date:`${now.getDate().toString().padStart(2,"0")}/${(now.getMonth()+1).toString().padStart(2,"0")}/${now.getFullYear().toString().slice(-2)}`,size:formatFileSize(file.size),storageUrl:path,downloadUrl,mimeType:file.type,aiAnalysis:null,aiStatus:"pending"});sM(null)}catch(err){alert("Error al subir: "+err.message)}finally{setUploading(false);setUploadProg(0);if(fileRef.current)fileRef.current.value=""}}}/>
+    <input ref={fileRef} type="file" accept=".pdf,.jpg,.jpeg,.png" style={{display:"none"}} onChange={async(e)=>{const file=e.target.files?.[0];if(!file||!user)return;const v=validateFile(file);if(!v.valid){alert(v.error);return;}setUploading(true);setUploadProg(0);const fileRef2=file;try{const{path,downloadUrl}=await uploadDocument(user.uid,file,(p)=>setUploadProg(p));const now=new Date();const docData={name:file.name.replace(/\.[^.]+$/,""),emoji:getEmojiForType(uploadType||"Otro"),type:uploadType||"Otro",date:`${now.getDate().toString().padStart(2,"0")}/${(now.getMonth()+1).toString().padStart(2,"0")}/${now.getFullYear().toString().slice(-2)}`,size:formatFileSize(file.size),storageUrl:path,downloadUrl,mimeType:file.type,aiAnalysis:null,aiStatus:"analyzing"};const docRef=await addDocument(user.uid,docData);sM(null);
+      // Trigger AI analysis in background
+      analyzeDocument(fileRef2,uploadType).then(analysis=>{if(docRef?.id){updateDocument(user.uid,docRef.id,{aiAnalysis:analysis,aiStatus:"complete"})}}).catch(()=>{if(docRef?.id){updateDocument(user.uid,docRef.id,{aiStatus:"complete"})}});
+    }catch(err){alert("Error: "+err.message)}finally{setUploading(false);setUploadProg(0);if(fileRef.current)fileRef.current.value=""}}}/>
   </div>;
 
   /* PROFILE */
