@@ -92,16 +92,34 @@ export function getAvailableIntegrations() {
   return SERVICES.map((s) => ({ ...s }));
 }
 
+// Providers that support OAuth web flow
+const OAUTH_PROVIDERS = ["google_fit", "fitbit", "oura"];
+// Providers that are native-only
+const NATIVE_ONLY = ["apple_health", "samsung_health"];
+
 /**
- * Mark a wearable service as connected in Firestore
- * Writes to users/{uid}/integrations/{serviceId}
+ * Connect a wearable service.
+ * - OAuth providers (Google Fit, Fitbit, Oura): redirects to OAuth consent page
+ * - Native-only (Apple Health, Samsung Health): only works in Capacitor native app
+ * - Others (Garmin, Withings, Strava): marks as connected in Firestore (manual for now)
  */
 export async function connectService(uid, serviceId) {
   const service = SERVICES.find((s) => s.id === serviceId);
-  if (!service) {
-    throw new Error(`Unknown service: ${serviceId}`);
+  if (!service) throw new Error(`Unknown service: ${serviceId}`);
+
+  // OAuth providers — redirect to serverless OAuth endpoint
+  const oauthId = serviceId.replace("_", "-"); // google_fit → google-fit
+  if (OAUTH_PROVIDERS.includes(serviceId)) {
+    window.location.href = `/api/auth/${oauthId}?action=connect&uid=${uid}`;
+    return; // Page will redirect
   }
 
+  // Native-only providers
+  if (NATIVE_ONLY.includes(serviceId) && !isNativeApp()) {
+    throw new Error("This provider is only available on the mobile app.");
+  }
+
+  // For native or manual providers, mark as connected in Firestore
   const ref = doc(db, "users", uid, "integrations", serviceId);
   await setDoc(ref, {
     serviceId,
@@ -111,6 +129,51 @@ export async function connectService(uid, serviceId) {
     connectedAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
+}
+
+/**
+ * Handle OAuth callback — save tokens and mark as connected.
+ * Called from the app when redirected back from OAuth flow.
+ */
+export async function handleOAuthCallback(uid, provider, tokenData) {
+  const serviceId = provider.replace("-", "_"); // google-fit → google_fit
+  const service = SERVICES.find((s) => s.id === serviceId);
+  if (!service) return;
+
+  const ref = doc(db, "users", uid, "integrations", serviceId);
+  await setDoc(ref, {
+    serviceId,
+    name: service.name,
+    icon: service.icon,
+    connected: true,
+    connectedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    tokens: tokenData, // Stored encrypted in Firestore
+  });
+}
+
+/**
+ * Fetch latest health data from a connected provider via the sync API.
+ */
+export async function syncProviderData(uid, provider, accessToken) {
+  try {
+    const res = await fetch(`/api/auth/sync?provider=${provider}&accessToken=${accessToken}`);
+    if (!res.ok) throw new Error("Sync failed");
+    const result = await res.json();
+
+    // Save synced data to Firestore
+    const ref = doc(db, "users", uid, "wearableData", "latest");
+    await setDoc(ref, {
+      ...result.data,
+      source: provider,
+      syncedAt: serverTimestamp(),
+    }, { merge: true });
+
+    return result.data;
+  } catch (err) {
+    console.error(`Sync error for ${provider}:`, err);
+    return null;
+  }
 }
 
 /**

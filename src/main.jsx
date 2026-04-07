@@ -57,6 +57,29 @@ function Root() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Handle OAuth callback from wearable providers
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const provider = params.get('wearable_connected')
+    const uid = params.get('uid')
+    const tokens = params.get('tokens')
+    const error = params.get('wearable_error')
+
+    if (error) {
+      console.error('Wearable connection error:', error)
+      window.history.replaceState({}, '', '/')
+    } else if (provider && uid && tokens) {
+      import('./services/wearables').then(({ handleOAuthCallback }) => {
+        try {
+          const tokenData = JSON.parse(atob(tokens.replace(/-/g,'+').replace(/_/g,'/')))
+          handleOAuthCallback(uid, provider, tokenData)
+            .then(() => { window.history.replaceState({}, '', '/') })
+            .catch(err => console.error('OAuth save error:', err))
+        } catch (e) { console.error('Token parse error:', e) }
+      })
+    }
+  }, [])
+
   if (loading) return <LoadingSplash />
 
   return (
