@@ -6,7 +6,8 @@
     "ai": "IA",
     "tips": "Tips",
     "docs": "Docs",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "wearables": "Wearables"
   },
   "common": {
     "close": "Cerrar",
@@ -59,7 +60,18 @@
     "sleep": "Sueño",
     "spo2": "SpO2",
     "hrv": "VFC",
-    "standing": "De pie"
+    "standing": "De pie",
+    "title": "Dispositivos y Wearables",
+    "subtitle": "Conecta tus dispositivos para datos en tiempo real",
+    "connected": "Conectado",
+    "disconnected": "Desconectado",
+    "connect": "Conectar",
+    "disconnect": "Desconectar",
+    "noDevices": "No hay dispositivos conectados",
+    "addDevice": "Añadir dispositivo",
+    "syncStatus": "Última sincronización",
+    "nativeOnly": "Disponible en la app móvil",
+    "dataPrivacy": "Tus datos de wearables están cifrados y nunca se comparten con terceros."
   },
   "family": {
     "title": "Árbol Familiar",

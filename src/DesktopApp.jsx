@@ -6,6 +6,7 @@ import { RG } from "./data/referenceRanges";
 import { uploadDocument, validateFile, formatFileSize, getEmojiForType } from "./services/storage";
 import { addDocument, updateDocument } from "./services/firestore";
 import { chatWithAI, analyzeDocument, isAIAvailable } from "./services/ai";
+import { getAvailableIntegrations, connectService, disconnectService, isNativeApp } from "./services/wearables";
 
 /* ═══ ICONS ═══ */
 const S=p=>(<svg width={p.z||20} height={p.z||20} viewBox="0 0 24 24" fill="none" stroke={p.sk||"currentColor"} strokeWidth={p.sw||1.7} strokeLinecap="round" strokeLinejoin="round" style={p.style}>{p.children}</svg>);
@@ -99,7 +100,7 @@ export default function DesktopApp(){
   const{t,i18n}=useTranslation();
   const{onboardingData,handleLogout,user}=useAuth();
   const userData=useUserData();
-  const{profile:realProfile,documents:realDocs,isEmpty,isDemo,demo}=userData;
+  const{profile:realProfile,documents:realDocs,isEmpty,isDemo,demo,integrations}=userData;
   // Resolve data: use real data when available, demo data as fallback
   const U=realProfile||(isDemo?demo.profile:null);
   const WEAR=isDemo?demo.wear:null;
@@ -142,7 +143,7 @@ export default function DesktopApp(){
   useEffect(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight},[msgs]);
 
   const mem=TM.find(m=>m.id===fam),lat=BL.length>0?BL[BL.length-1]:null;
-  const tabs=[{id:"d",l:"Home",ic:I.Heart},{id:"f",l:"Familia",ic:I.DNA},{id:"e",l:"Datos",ic:I.Act},{id:"a",l:"IA",ic:I.Chat},{id:"t",l:"Tips",ic:I.Leaf},{id:"o",l:"Docs",ic:I.File},{id:"p",l:"Perfil",ic:I.User}];
+  const tabs=[{id:"d",l:"Home",ic:I.Heart},{id:"f",l:"Familia",ic:I.DNA},{id:"e",l:"Datos",ic:I.Act},{id:"a",l:"IA",ic:I.Chat},{id:"t",l:"Tips",ic:I.Leaf},{id:"w",l:t("nav.wearables"),ic:I.Watch},{id:"o",l:"Docs",ic:I.File},{id:"p",l:"Perfil",ic:I.User}];
   const alertCount=INS.filter(i=>i.ur!=="low").length;
 
   const sendMsg=async(text)=>{if(!text.trim())return;setMsgs(p=>[...p,{r:"user",t:text}]);setInp("");
@@ -409,7 +410,51 @@ export default function DesktopApp(){
     <button onClick={handleLogout} style={{width:"100%",padding:"14px 0",borderRadius:14,fontSize:14,fontWeight:700,color:C.dan,background:C.danL,border:`1px solid ${C.danS}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all 0.15s"}}><I.LogOut z={16} style={{color:C.dan}}/>Cerrar sesión</button>
   </div>;
 
-  const pg={d:Dash,f:Fam,e:Evo,a:AiChat,t:TipsView,o:DocView,p:Prof},P=pg[tab]||Dash;
+  /* WEARABLES */
+  const WearView=()=>{
+    const[loading,setLoading]=useState(null);
+    const allServices=getAvailableIntegrations();
+    const native=isNativeApp();
+    const merged=allServices.map(s=>{const ui=integrations.find(i=>i.serviceId===s.id);return{...s,connected:ui?ui.connected:false}});
+    const handleToggle=async(svc)=>{
+      setLoading(svc.id);
+      try{if(svc.connected){await disconnectService(user.uid,svc.id)}else{await connectService(user.uid,svc.id)}}catch(e){console.error(e)}
+      setLoading(null);
+    };
+    const nativeOnly=["apple_health","samsung_health"];
+    return <div style={{maxWidth:900}}>
+      <div style={{marginBottom:16}}>
+        <h2 style={{fontSize:22,fontWeight:900,color:C.tx}}>{t("wearables.title")}</h2>
+        <p style={{fontSize:13,color:C.tx2,marginTop:4}}>{t("wearables.subtitle")}</p>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+        {merged.map(svc=><Cd key={svc.id} style={{padding:"16px 18px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:12}}>
+            <div style={{width:48,height:48,borderRadius:14,background:C.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{svc.icon}</div>
+            <div style={{flex:1}}>
+              <div style={{display:"flex",alignItems:"center",gap:6}}>
+                <p style={{fontSize:14,fontWeight:700,color:C.tx}}>{svc.name}</p>
+                <Bd s={svc.connected?"g":"w"} t={svc.connected?t("wearables.connected"):t("wearables.disconnected")}/>
+              </div>
+              <p style={{fontSize:12,color:C.tx3,marginTop:2}}>{svc.description}</p>
+              {!native&&nativeOnly.includes(svc.id)&&<p style={{fontSize:10,color:C.wrn,marginTop:2}}>{t("wearables.nativeOnly")}</p>}
+            </div>
+            <button disabled={loading===svc.id||(!native&&nativeOnly.includes(svc.id))} onClick={()=>handleToggle(svc)} style={{padding:"8px 18px",borderRadius:10,fontSize:12,fontWeight:700,cursor:loading===svc.id?"wait":"pointer",border:`1px solid ${svc.connected?C.danS:C.priS}`,background:svc.connected?C.danL:C.priL,color:svc.connected?C.dan:C.pri,opacity:(loading===svc.id||(!native&&nativeOnly.includes(svc.id)))?0.5:1}}>
+              {loading===svc.id?"...":svc.connected?t("wearables.disconnect"):t("wearables.connect")}
+            </button>
+          </div>
+        </Cd>)}
+      </div>
+      <Cd style={{padding:"14px 18px",background:C.sucL,border:`1px solid ${C.sucS}`,marginTop:16}}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <I.Shield z={17} style={{color:C.suc}}/>
+          <p style={{fontSize:12,color:C.suc,fontWeight:600}}>{t("wearables.dataPrivacy")}</p>
+        </div>
+      </Cd>
+    </div>;
+  };
+
+  const pg={d:Dash,f:Fam,e:Evo,a:AiChat,t:TipsView,w:WearView,o:DocView,p:Prof},P=pg[tab]||Dash;
 
   return (<div onDragOver={(e)=>e.preventDefault()} onDrop={(e)=>e.preventDefault()} style={{minHeight:"100vh",display:"flex",background:`linear-gradient(180deg,${C.bg},${C.bg2})`,fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif"}}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',-apple-system,sans-serif;-webkit-font-smoothing:antialiased}button{outline:none}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:${C.brd};border-radius:3px}::-webkit-scrollbar-thumb:hover{background:${C.brd2}}input::placeholder{color:${C.tx3}}`}</style>

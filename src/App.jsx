@@ -6,6 +6,7 @@ import { RG } from "./data/referenceRanges";
 import { uploadDocument, validateFile, formatFileSize, getEmojiForType } from "./services/storage";
 import { addDocument, updateDocument } from "./services/firestore";
 import { chatWithAI, analyzeDocument, isAIAvailable } from "./services/ai";
+import { getAvailableIntegrations, connectService, disconnectService, isNativeApp } from "./services/wearables";
 
 /* ═══ ICONS ═══ */
 const S=p=>(<svg width={p.z||20} height={p.z||20} viewBox="0 0 24 24" fill="none" stroke={p.sk||"currentColor"} strokeWidth={p.sw||1.7} strokeLinecap="round" strokeLinejoin="round" style={p.style}>{p.children}</svg>);
@@ -91,7 +92,7 @@ export default function App(){
   const{t,i18n}=useTranslation();
   const{onboardingData,handleLogout,user}=useAuth();
   const userData=useUserData();
-  const{profile:realProfile,documents:realDocs,isEmpty,isDemo,demo}=userData;
+  const{profile:realProfile,documents:realDocs,isEmpty,isDemo,demo,integrations}=userData;
   // Only show demo data for the demo account — real users see ONLY their own data
   const U=realProfile||(isDemo?demo.profile:null);
   const WEAR=isDemo?demo.wear:null;
@@ -120,7 +121,7 @@ export default function App(){
   useEffect(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight},[msgs]);
   const closeOTP=useCallback(()=>sM(null),[]);
   const mem=TM.find(m=>m.id===fam),lat=BL.length>0?BL[BL.length-1]:null,ac=an?"opacity-100 translate-y-0":"opacity-0 translate-y-3";
-  const tabs=[{id:"d",l:t("nav.home"),ic:I.Heart},{id:"f",l:t("nav.family"),ic:I.DNA},{id:"e",l:t("nav.data"),ic:I.Act},{id:"a",l:t("nav.ai"),ic:I.Chat},{id:"t",l:t("nav.tips"),ic:I.Leaf},{id:"o",l:t("nav.docs"),ic:I.File},{id:"p",l:t("nav.profile"),ic:I.User}];
+  const tabs=[{id:"d",l:t("nav.home"),ic:I.Heart},{id:"f",l:t("nav.family"),ic:I.DNA},{id:"e",l:t("nav.data"),ic:I.Act},{id:"a",l:t("nav.ai"),ic:I.Chat},{id:"t",l:t("nav.tips"),ic:I.Leaf},{id:"w",l:t("nav.wearables"),ic:I.Watch},{id:"o",l:t("nav.docs"),ic:I.File},{id:"p",l:t("nav.profile"),ic:I.User}];
   const alertCount=INS.filter(i=>i.ur!=="low").length;
   const sendMsg=async(text)=>{if(!text.trim())return;setMsgs(p=>[...p,{r:"user",t:text}]);setInp("");
     // Show typing indicator
@@ -227,7 +228,49 @@ export default function App(){
     <button onClick={handleLogout} style={{width:"100%",padding:"12px 0",borderRadius:14,fontSize:13,fontWeight:700,color:C.dan,background:C.danL,border:`1px solid ${C.danS}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"all 0.15s"}}><I.LogOut z={15} style={{color:C.dan}}/>{t("common.logout")}</button>
   </div>;
 
-  const pg={d:Dash,f:Fam,e:Evo,a:AiChat,t:Tips,o:Doc,p:Prof},P=pg[tab]||Dash;
+  /* WEARABLES */
+  const Wear=()=>{
+    const[loading,setLoading]=useState(null);
+    const allServices=getAvailableIntegrations();
+    const native=isNativeApp();
+    const merged=allServices.map(s=>{const ui=integrations.find(i=>i.serviceId===s.id);return{...s,connected:ui?ui.connected:false}});
+    const handleToggle=async(svc)=>{
+      setLoading(svc.id);
+      try{if(svc.connected){await disconnectService(user.uid,svc.id)}else{await connectService(user.uid,svc.id)}}catch(e){console.error(e)}
+      setLoading(null);
+    };
+    const nativeOnly=["apple_health","samsung_health"];
+    return <div className="sy4" style={{transition:"all 0.3s",opacity:1}}>
+      <div style={{marginBottom:8}}>
+        <h2 style={{fontSize:18,fontWeight:900,color:C.tx}}>{t("wearables.title")}</h2>
+        <p style={{fontSize:12,color:C.tx2,marginTop:2}}>{t("wearables.subtitle")}</p>
+      </div>
+      {merged.map(svc=><Cd key={svc.id} style={{padding:"12px 14px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <div style={{width:40,height:40,borderRadius:12,background:C.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>{svc.icon}</div>
+          <div style={{flex:1}}>
+            <div style={{display:"flex",alignItems:"center",gap:6}}>
+              <p style={{fontSize:13,fontWeight:700,color:C.tx}}>{svc.name}</p>
+              <Bd s={svc.connected?"g":"w"} t={svc.connected?t("wearables.connected"):t("wearables.disconnected")}/>
+            </div>
+            <p style={{fontSize:11,color:C.tx3,marginTop:2}}>{svc.description}</p>
+            {!native&&nativeOnly.includes(svc.id)&&<p style={{fontSize:10,color:C.wrn,marginTop:2}}>{t("wearables.nativeOnly")}</p>}
+          </div>
+          <button disabled={loading===svc.id||(!native&&nativeOnly.includes(svc.id))} onClick={()=>handleToggle(svc)} style={{padding:"6px 14px",borderRadius:10,fontSize:11,fontWeight:700,cursor:loading===svc.id?"wait":"pointer",border:`1px solid ${svc.connected?C.danS:C.priS}`,background:svc.connected?C.danL:C.priL,color:svc.connected?C.dan:C.pri,opacity:(loading===svc.id||(!native&&nativeOnly.includes(svc.id)))?0.5:1}}>
+            {loading===svc.id?"...":svc.connected?t("wearables.disconnect"):t("wearables.connect")}
+          </button>
+        </div>
+      </Cd>)}
+      <Cd style={{padding:"12px 14px",background:C.sucL,border:`1px solid ${C.sucS}`}}>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <I.Shield z={15} style={{color:C.suc}}/>
+          <p style={{fontSize:11,color:C.suc,fontWeight:600}}>{t("wearables.dataPrivacy")}</p>
+        </div>
+      </Cd>
+    </div>;
+  };
+
+  const pg={d:Dash,f:Fam,e:Evo,a:AiChat,t:Tips,w:Wear,o:Doc,p:Prof},P=pg[tab]||Dash;
   return (<div onDragOver={(e)=>e.preventDefault()} onDrop={(e)=>e.preventDefault()} style={{minHeight:"100vh",display:"flex",justifyContent:"center",background:`linear-gradient(180deg,${C.bg},${C.bg2})`,fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif"}}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',-apple-system,sans-serif;-webkit-font-smoothing:antialiased}.sy4>*+*{margin-top:12px}.sy5>*+*{margin-top:16px}.translate-y-0{transform:translateY(0)}.translate-y-3{transform:translateY(12px)}.opacity-0{opacity:0}.opacity-100{opacity:1}button{outline:none}::-webkit-scrollbar{display:none}input::placeholder{color:${C.tx3}}`}</style>
     <div style={{width:"100%",maxWidth:430,display:"flex",flexDirection:"column",minHeight:"100vh",position:"relative"}}>

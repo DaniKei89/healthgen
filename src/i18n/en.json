@@ -6,7 +6,8 @@
     "ai": "AI",
     "tips": "Tips",
     "docs": "Docs",
-    "profile": "Profile"
+    "profile": "Profile",
+    "wearables": "Wearables"
   },
   "common": {
     "close": "Close",
@@ -59,7 +60,18 @@
     "sleep": "Sleep",
     "spo2": "SpO2",
     "hrv": "HRV",
-    "standing": "Standing"
+    "standing": "Standing",
+    "title": "Devices & Wearables",
+    "subtitle": "Connect your devices for real-time health data",
+    "connected": "Connected",
+    "disconnected": "Not connected",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "noDevices": "No devices connected",
+    "addDevice": "Add device",
+    "syncStatus": "Last synced",
+    "nativeOnly": "Available on mobile app",
+    "dataPrivacy": "Your wearable data is encrypted and never shared with third parties."
   },
   "family": {
     "title": "Family Tree",
