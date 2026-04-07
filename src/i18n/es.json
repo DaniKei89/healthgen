@@ -3,7 +3,7 @@
     "home": "Home",
     "family": "Familia",
     "data": "Datos",
-    "ai": "IA",
+    "ai": "Laidy",
     "tips": "Tips",
     "docs": "Docs",
     "profile": "Perfil",
@@ -120,10 +120,10 @@
     "weightLabel": "Peso"
   },
   "chat": {
-    "title": "Asistente IA",
-    "subtitle": "Informativo · Consulta siempre tu médico",
-    "placeholder": "Pregunta sobre tu salud...",
-    "aiLabel": "Ledora AI IA"
+    "title": "Laidy",
+    "subtitle": "Tu asistente de salud inteligente · Consulta siempre a tu médico",
+    "placeholder": "Habla con Laidy sobre tu salud...",
+    "aiLabel": "Laidy"
   },
   "tips": {
     "title": "Recomendaciones",

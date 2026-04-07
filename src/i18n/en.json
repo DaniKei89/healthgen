@@ -3,7 +3,7 @@
     "home": "Home",
     "family": "Family",
     "data": "Data",
-    "ai": "AI",
+    "ai": "Laidy",
     "tips": "Tips",
     "docs": "Docs",
     "profile": "Profile",
@@ -120,10 +120,10 @@
     "weightLabel": "Weight"
   },
   "chat": {
-    "title": "AI Assistant",
-    "subtitle": "Informational · Always consult your doctor",
-    "placeholder": "Ask about your health...",
-    "aiLabel": "Ledora AI AI"
+    "title": "Laidy",
+    "subtitle": "Your intelligent health assistant · Always consult your doctor",
+    "placeholder": "Talk to Laidy about your health...",
+    "aiLabel": "Laidy"
   },
   "tips": {
     "title": "Recommendations",

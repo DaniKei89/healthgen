@@ -48,8 +48,8 @@ describe('i18n Translations', () => {
     expect(en.nav.family).toBeDefined()
   })
 
-  it('should reference Ledora AI brand name', () => {
-    expect(es.chat.aiLabel).toContain('Ledora AI')
-    expect(en.chat.aiLabel).toContain('Ledora AI')
+  it('should reference Laidy brand name', () => {
+    expect(es.chat.aiLabel).toContain('Laidy')
+    expect(en.chat.aiLabel).toContain('Laidy')
   })
 })

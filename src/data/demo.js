@@ -119,7 +119,7 @@ export const DEMO_TIPS = [
 
 // Initial chat messages
 export const DEMO_CHAT_INIT = [
-  { r: "ai", t: "Hola Carlos \ud83d\udc4b Soy tu asistente m\u00e9dico IA. Puedo analizar tus datos, patrones hereditarios, wearables y m\u00e1s. \u00bfEn qu\u00e9 te ayudo?" },
+  { r: "ai", t: "Hola Carlos \ud83d\udc4b Soy Laidy, tu asistente de salud inteligente de Ledora AI. Puedo analizar tus datos, patrones hereditarios, wearables y m\u00e1s. \u00bfEn qu\u00e9 te ayudo?" },
   { r: "sug", t: null, opts: ["\u00bfPor qu\u00e9 baja mi hierro?", "\u00bfRiesgos para Sof\u00eda?", "\u00bfQu\u00e9 comer esta semana?", "\u00bfMi sue\u00f1o es suficiente?"] },
 ];
 
