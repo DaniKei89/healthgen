@@ -141,3 +141,26 @@ export function onInsights(uid, callback) {
     callback([]);
   });
 }
+
+// ═══════════════════════════════════════
+// INTEGRATIONS (wearable connections)
+// ═══════════════════════════════════════
+
+export async function setIntegration(uid, serviceId, data) {
+  const ref = doc(db, "users", uid, "integrations", serviceId);
+  return setDoc(ref, { ...data, updatedAt: serverTimestamp() }, { merge: true });
+}
+
+export async function deleteIntegration(uid, serviceId) {
+  return deleteDoc(doc(db, "users", uid, "integrations", serviceId));
+}
+
+export function onIntegrations(uid, callback) {
+  const ref = collection(db, "users", uid, "integrations");
+  return onSnapshot(ref, (snap) => {
+    callback(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  }, (error) => {
+    console.warn("onIntegrations error:", error.message);
+    callback([]);
+  });
+}

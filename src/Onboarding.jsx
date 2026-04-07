@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "./AuthContext";
-import { signInWithGoogle, signUpWithEmail, signInWithEmail, resetPassword, getAdditionalUserInfo } from "./firebase";
+import { signInWithGoogle, signUpWithEmail, signInWithEmail, resetPassword, sendVerificationEmail, getAdditionalUserInfo } from "./firebase";
 
 /* ═══ ICONS ═══ */
 const S = (p) => (
@@ -247,6 +247,7 @@ export default function Onboarding() {
       localStorage.setItem("ledora_auth_v2", "true");
       if (isSignUp) {
         const result = await signUpWithEmail(email, password);
+        await sendVerificationEmail(result.user);
         markNewUser(result.user.uid);
       } else {
         await signInWithEmail(email, password);
@@ -606,7 +607,7 @@ export default function Onboarding() {
           <label style={labelStyle}>{t("onboarding.step2.allergiesQuestion")}</label>
           <TriToggle value={hasAllergies} onChange={setHasAllergies}/>
           {hasAllergies==="Sí" && (
-            <AutocompleteInput options={ALLERGY_OPTIONS} selected={allergiesList} onSelect={(v)=>{setAllergiesList(p=>[...p,v]);setAllergiesText([...allergiesList,v].join(", "))}} onRemove={(v)=>{const next=allergiesList.filter(x=>x!==v);setAllergiesList(next);setAllergiesText(next.join(", "))}} placeholder={t("onboarding.searchAllergies")} />
+            <AutocompleteInput options={ALLERGY_OPTIONS[i18n.language?.startsWith('en')?'en':'es']} selected={allergiesList} onSelect={(v)=>{setAllergiesList(p=>[...p,v]);setAllergiesText([...allergiesList,v].join(", "))}} onRemove={(v)=>{const next=allergiesList.filter(x=>x!==v);setAllergiesList(next);setAllergiesText(next.join(", "))}} placeholder={t("onboarding.searchAllergies")} />
           )}
         </div>
         {/* Medications */}
@@ -614,7 +615,7 @@ export default function Onboarding() {
           <label style={labelStyle}>{t("onboarding.step2.medsQuestion")}</label>
           <TriToggle value={hasMeds} onChange={setHasMeds}/>
           {hasMeds==="Sí" && (
-            <AutocompleteInput options={MED_OPTIONS} selected={medsList} onSelect={(v)=>{setMedsList(p=>[...p,v]);setMedsText([...medsList,v].join(", "))}} onRemove={(v)=>{const next=medsList.filter(x=>x!==v);setMedsList(next);setMedsText(next.join(", "))}} placeholder={t("onboarding.searchMeds")} />
+            <AutocompleteInput options={MED_OPTIONS[i18n.language?.startsWith('en')?'en':'es']} selected={medsList} onSelect={(v)=>{setMedsList(p=>[...p,v]);setMedsText([...medsList,v].join(", "))}} onRemove={(v)=>{const next=medsList.filter(x=>x!==v);setMedsList(next);setMedsText(next.join(", "))}} placeholder={t("onboarding.searchMeds")} />
           )}
         </div>
         {/* Conditions */}
@@ -622,7 +623,7 @@ export default function Onboarding() {
           <label style={labelStyle}>{t("onboarding.step2.conditionsQuestion")}</label>
           <TriToggle value={hasConditions} onChange={setHasConditions}/>
           {hasConditions==="Sí" && (
-            <AutocompleteInput options={CONDITION_OPTIONS} selected={conditionsList} onSelect={(v)=>{setConditionsList(p=>[...p,v]);setConditionsText([...conditionsList,v].join(", "))}} onRemove={(v)=>{const next=conditionsList.filter(x=>x!==v);setConditionsList(next);setConditionsText(next.join(", "))}} placeholder={t("onboarding.searchConditions")} />
+            <AutocompleteInput options={CONDITION_OPTIONS[i18n.language?.startsWith('en')?'en':'es']} selected={conditionsList} onSelect={(v)=>{setConditionsList(p=>[...p,v]);setConditionsText([...conditionsList,v].join(", "))}} onRemove={(v)=>{const next=conditionsList.filter(x=>x!==v);setConditionsList(next);setConditionsText(next.join(", "))}} placeholder={t("onboarding.searchConditions")} />
           )}
         </div>
         {/* Blood type */}

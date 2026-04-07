@@ -101,14 +101,13 @@ export default function DesktopApp(){
   const userData=useUserData();
   const{profile:realProfile,documents:realDocs,isEmpty,isDemo,demo}=userData;
   // Resolve data: use real data when available, demo data as fallback
-  const U=realProfile||demo.profile;
-  const WEAR=demo.wear;
+  const U=realProfile||(isDemo?demo.profile:null);
+  const WEAR=isDemo?demo.wear:null;
   const TM=isDemo&&isEmpty.family?demo.family:userData.familyMembers;
   const CN=isDemo&&isEmpty.family?demo.connections:userData.connections;
   const HR=isDemo&&isEmpty.family?demo.risks:userData.hereditaryRisks;
   const BL=isDemo&&isEmpty.labs?demo.labs:userData.labResults;
   const INS=isDemo&&isEmpty.labs?demo.insights:userData.insights;
-  const DC_INIT=demo.docsDesktop;
   const TIPS_DATA=isDemo?demo.tips.map(t=>({...t,ic:IC_MAP[t.icKey]||I.Leaf})):userData.tips.map(t=>({...t,ic:IC_MAP[t.icKey||"Leaf"]||I.Leaf}));
   const CHAT_INIT=demo.chatInit;
   const AI_R=demo.aiResponses;
@@ -120,7 +119,7 @@ export default function DesktopApp(){
   const[msgs,setMsgs]=useState(CHAT_INIT);
   const[inp,setInp]=useState("");
   const[tipCat,setTC]=useState("all");
-  const[docs,setDocs]=useState(DC_INIT);
+  const[docs,setDocs]=useState([]);
   const[uploadType,setUploadType]=useState(null);
   const[uploading,setUploading]=useState(false);
   const[uploadProg,setUploadProg]=useState(0);
@@ -149,7 +148,7 @@ export default function DesktopApp(){
   const sendMsg=async(text)=>{if(!text.trim())return;setMsgs(p=>[...p,{r:"user",t:text}]);setInp("");
     setMsgs(p=>[...p,{r:"ai",t:"..."}]);
     try{
-      const userContext={profile:U,labResults:BL.length>0?{latest:BL[BL.length-1],history:BL}:null,family:TM.length>0?TM.map(m=>({name:m.nm,relation:m.rl,conditions:m.co})):null,wearables:WEAR};
+      const userContext={profile:U,labResults:BL.length>0?{latest:BL[BL.length-1],history:BL}:null,family:TM.length>0?TM.map(m=>({name:m.nm,relation:m.rl,conditions:m.co})):null,wearables:WEAR||null};
       let resp;
       if(isAIAvailable()){resp=await chatWithAI(text,userContext)}
       else{resp=AI_R[text]||`I analyzed your question about "${text}".\n\nBased on your profile, I recommend consulting with your doctor.\n\n\u26a0\ufe0f *Informational only. Always consult your doctor.*`}
@@ -202,26 +201,26 @@ export default function DesktopApp(){
     {/* Welcome */}
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       {isDemo&&<div style={{padding:"10px 16px",borderRadius:12,background:`linear-gradient(135deg,${C.wrnL},${C.wrnS}40)`,border:`1px solid ${C.wrnS}`,display:"flex",alignItems:"center",gap:8,marginBottom:8}}><I.Eye z={14} style={{color:C.wrn}}/><p style={{fontSize:12,fontWeight:600,color:C.wrn}}>Modo demo — datos de ejemplo. Añade tus datos reales para personalizar.</p></div>}
-      <div><p style={{fontSize:14,color:C.tx3,fontWeight:500}}>Buenos días</p><h1 style={{fontSize:32,fontWeight:900,color:C.tx,letterSpacing:-0.5}}>{realProfile?.firstName||U.name.split(" ")[0]}</h1></div>
+      <div><p style={{fontSize:14,color:C.tx3,fontWeight:500}}>Buenos días</p><h1 style={{fontSize:32,fontWeight:900,color:C.tx,letterSpacing:-0.5}}>{realProfile?.firstName||U?.name?.split(" ")[0]||"—"}</h1></div>
       <Cd style={{padding:"10px 16px",background:`linear-gradient(135deg,${C.card},${C.priL})`,border:`1px solid ${C.priS}`,cursor:"pointer"}} onClick={()=>sM("otp")}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}><I.QR z={18} style={{color:C.pri}}/><div><p style={{fontSize:9,color:C.tx3,fontWeight:600,textTransform:"uppercase",letterSpacing:0.8}}>Blockchain ID</p><p style={{fontSize:14,fontWeight:800,color:C.tx,fontFamily:"'JetBrains Mono',monospace",letterSpacing:1}}>{realProfile?.bid||U.bid}</p></div></div>
+        <div style={{display:"flex",alignItems:"center",gap:10}}><I.QR z={18} style={{color:C.pri}}/><div><p style={{fontSize:9,color:C.tx3,fontWeight:600,textTransform:"uppercase",letterSpacing:0.8}}>Blockchain ID</p><p style={{fontSize:14,fontWeight:800,color:C.tx,fontFamily:"'JetBrains Mono',monospace",letterSpacing:1}}>{realProfile?.bid||U?.bid||"—"}</p></div></div>
       </Cd>
     </div>
     {/* Smart Tips */}
     {activeTips.length>0&&<div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(activeTips.length,3)},1fr)`,gap:10}}>{activeTips.map(tip=><div key={tip.id} style={{padding:"14px 16px",borderRadius:14,background:`linear-gradient(135deg,${tip.color}08,${tip.color}15)`,border:`1px solid ${tip.color}25`,position:"relative"}}><button onClick={()=>dismiss(tip.id)} style={{position:"absolute",top:10,right:10,background:"none",border:"none",cursor:"pointer",fontSize:16,color:C.tx3,lineHeight:1}}>×</button><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><span style={{fontSize:20}}>{tip.icon}</span><span style={{fontSize:13,fontWeight:800,color:C.tx}}>{tip.title}</span></div><p style={{fontSize:12,color:C.tx2,lineHeight:1.4}}>{tip.desc}</p></div>)}</div>}
     {/* Vitals Row */}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:10}}>{[{l:"Altura",v:`${realProfile?.h||U.h}cm`,ic:I.Ruler,cl:C.pri},{l:"Peso",v:`${realProfile?.w||U.w}kg`,ic:I.Scale,cl:C.pur},{l:"Pulso",v:`${realProfile?.hr||U.hr}bpm`,ic:I.Pulse,cl:C.dan},{l:"Tensión",v:realProfile?.bp||U.bp,ic:I.Heart,cl:C.suc},{l:"SpO2",v:`${realProfile?.sp02||U.sp02}%`,ic:I.Oxy,cl:C.blu},{l:"Sangre",v:realProfile?.bl||U.bl,ic:I.Drop,cl:C.pnk}].map((s,i)=><Cd key={i} style={{padding:"14px 16px"}}><div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}><s.ic z={14} style={{color:s.cl}}/><span style={{fontSize:10,color:C.tx3,fontWeight:600,textTransform:"uppercase",letterSpacing:0.4}}>{s.l}</span></div><span style={{fontSize:20,fontWeight:800,color:C.tx}}>{s.v}</span></Cd>)}</div>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:10}}>{[{l:"Altura",v:`${realProfile?.h||U?.h||"—"}cm`,ic:I.Ruler,cl:C.pri},{l:"Peso",v:`${realProfile?.w||U?.w||"—"}kg`,ic:I.Scale,cl:C.pur},{l:"Pulso",v:`${realProfile?.hr||U?.hr||"—"}bpm`,ic:I.Pulse,cl:C.dan},{l:"Tensión",v:realProfile?.bp||U?.bp||"—",ic:I.Heart,cl:C.suc},{l:"SpO2",v:`${realProfile?.sp02||U?.sp02||"—"}%`,ic:I.Oxy,cl:C.blu},{l:"Sangre",v:realProfile?.bl||U?.bl||"—",ic:I.Drop,cl:C.pnk}].map((s,i)=><Cd key={i} style={{padding:"14px 16px"}}><div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}><s.ic z={14} style={{color:s.cl}}/><span style={{fontSize:10,color:C.tx3,fontWeight:600,textTransform:"uppercase",letterSpacing:0.4}}>{s.l}</span></div><span style={{fontSize:20,fontWeight:800,color:C.tx}}>{s.v}</span></Cd>)}</div>
     {/* Two column: Wearables + Alerts */}
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
       {/* Wearables */}
       <Cd style={{padding:20}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}><h2 style={{fontSize:17,fontWeight:800,color:C.tx,display:"flex",alignItems:"center",gap:6}}><I.Watch z={17} style={{color:C.pur}}/>Wearables</h2><span style={{fontSize:11,color:C.tx3}}>Hoy, en directo</span></div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>{Object.entries(WEAR).map(([k,w])=>{const pct=Math.min((w.v/w.g)*100,100);return <div key={k} style={{textAlign:"center",padding:10,borderRadius:12,background:C.bg}}>
+        {WEAR?<div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>{Object.entries(WEAR).map(([k,w])=>{const pct=Math.min((w.v/w.g)*100,100);return <div key={k} style={{textAlign:"center",padding:10,borderRadius:12,background:C.bg}}>
           <div style={{position:"relative",width:50,height:50,margin:"0 auto 6px"}}><Ring pct={pct} color={w.cl} sz={50} sw={4}/><span style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:w.cl}}>{k==="sleep"?w.v:Math.round(pct)}%</span></div>
           <p style={{fontSize:14,fontWeight:800,color:C.tx}}>{typeof w.v==="number"&&w.v>=1000?(w.v/1000).toFixed(1)+"k":w.v}</p>
           <p style={{fontSize:10,color:C.tx3}}>{w.l}</p>
           <p style={{fontSize:9,color:C.tx3,opacity:0.6}}>{w.src}</p>
-        </div>})}</div>
+        </div>})}</div>:<div style={{textAlign:"center",padding:"30px 20px"}}><I.Watch z={32} style={{color:C.tx3,opacity:0.4,margin:"0 auto 8px"}}/><p style={{fontSize:14,fontWeight:700,color:C.tx}}>Conecta tus wearables</p><p style={{fontSize:12,color:C.tx3,marginTop:4}}>Sincroniza tu reloj o pulsera para ver datos en tiempo real.</p></div>}
       </Cd>
       {/* Alerts + Out of range */}
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -323,7 +322,7 @@ export default function DesktopApp(){
     {uploading&&<Cd style={{padding:"14px 18px"}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><I.Scan z={14} style={{color:C.pri}}/><span style={{fontSize:13,fontWeight:700,color:C.pri}}>Subiendo... {uploadProg}%</span></div><RB pct={uploadProg} color={C.pri}/></Cd>}
     {/* Stats */}
     <div style={{display:"flex",gap:12}}>
-      {(()=>{const allDocs=realDocs.length>0?realDocs:docs;return[{l:"Total",v:allDocs.length,cl:C.pri},{l:"Analíticas",v:allDocs.filter(d=>(d.type||d.type)==="Analítica").length,cl:C.suc},{l:"Informes",v:allDocs.filter(d=>(d.type||d.type)==="Informe").length,cl:C.pur},{l:"Imágenes",v:allDocs.filter(d=>["Radiografía","MRI/TAC"].includes(d.type||d.type)).length,cl:C.blu}]})().map((s,i)=><Cd key={i} style={{flex:1,padding:"12px 16px"}}><p style={{fontSize:10,color:C.tx3,fontWeight:600,textTransform:"uppercase"}}>{s.l}</p><p style={{fontSize:24,fontWeight:900,color:s.cl}}>{s.v}</p></Cd>)}
+      {(()=>{const allDocs=realDocs.length>0?realDocs:(isDemo?demo.docsDesktop:[]);return[{l:"Total",v:allDocs.length,cl:C.pri},{l:"Analíticas",v:allDocs.filter(d=>(d.type||d.type)==="Analítica").length,cl:C.suc},{l:"Informes",v:allDocs.filter(d=>(d.type||d.type)==="Informe").length,cl:C.pur},{l:"Imágenes",v:allDocs.filter(d=>["Radiografía","MRI/TAC"].includes(d.type||d.type)).length,cl:C.blu}]})().map((s,i)=><Cd key={i} style={{flex:1,padding:"12px 16px"}}><p style={{fontSize:10,color:C.tx3,fontWeight:600,textTransform:"uppercase"}}>{s.l}</p><p style={{fontSize:24,fontWeight:900,color:s.cl}}>{s.v}</p></Cd>)}
     </div>
     {/* Document preview modal */}
     {previewDoc&&<div style={{position:"fixed",inset:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.5)",backdropFilter:"blur(8px)"}} onClick={()=>setPreviewDoc(null)}>
@@ -391,17 +390,17 @@ export default function DesktopApp(){
       <Cd style={{padding:24,background:`linear-gradient(135deg,${C.priL},${C.purL})`}}>
         <div style={{display:"flex",alignItems:"center",gap:16}}>
           <div style={{width:68,height:68,borderRadius:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontWeight:800,color:"white",background:`linear-gradient(135deg,${C.pri},${C.pur})`,boxShadow:`0 6px 16px ${C.pri}30`,flexShrink:0}}>{realProfile?.firstName?realProfile.firstName.charAt(0).toUpperCase():"CM"}</div>
-          <div><h2 style={{fontSize:24,fontWeight:900,color:C.tx}}>{realProfile?.name||U.name}</h2><p style={{fontSize:14,color:C.tx2}}>{realProfile?.age||U.age} años · {realProfile?.h||U.h}cm · {realProfile?.w||U.w}kg</p><div style={{marginTop:6,display:"flex",gap:6}}><span style={{padding:"3px 12px",borderRadius:20,background:C.danL,fontSize:13,fontWeight:800,color:C.dan}}>{realProfile?.bl||U.bl}</span><span style={{padding:"3px 12px",borderRadius:20,background:C.bg,fontSize:13,fontWeight:600,color:C.tx2}}>IMC {realProfile?.bmi||U.bmi}</span></div></div>
+          <div><h2 style={{fontSize:24,fontWeight:900,color:C.tx}}>{realProfile?.name||U?.name||"—"}</h2><p style={{fontSize:14,color:C.tx2}}>{realProfile?.age||U?.age||"—"} años · {realProfile?.h||U?.h||"—"}cm · {realProfile?.w||U?.w||"—"}kg</p><div style={{marginTop:6,display:"flex",gap:6}}><span style={{padding:"3px 12px",borderRadius:20,background:C.danL,fontSize:13,fontWeight:800,color:C.dan}}>{realProfile?.bl||U?.bl||"—"}</span><span style={{padding:"3px 12px",borderRadius:20,background:C.bg,fontSize:13,fontWeight:600,color:C.tx2}}>IMC {realProfile?.bmi||U?.bmi||"—"}</span></div></div>
         </div>
       </Cd>
       <Cd style={{padding:"16px 20px",background:`linear-gradient(135deg,${C.card},${C.priL})`,border:`1.5px solid ${C.priS}`}}>
-        <div style={{display:"flex",alignItems:"center",gap:12}}><I.Link z={18} style={{color:C.pri}}/><div style={{flex:1}}><p style={{fontSize:10,color:C.tx3,fontWeight:600,textTransform:"uppercase",letterSpacing:0.8}}>Blockchain ID</p><p style={{fontSize:16,fontWeight:800,color:C.tx,fontFamily:"'JetBrains Mono',monospace",letterSpacing:1}}>{realProfile?.bid||U.bid}</p></div><button onClick={()=>sM("otp")} style={{padding:"8px 14px",borderRadius:8,fontSize:11,fontWeight:700,color:"white",background:C.pri,border:"none",cursor:"pointer"}}>Compartir</button></div>
+        <div style={{display:"flex",alignItems:"center",gap:12}}><I.Link z={18} style={{color:C.pri}}/><div style={{flex:1}}><p style={{fontSize:10,color:C.tx3,fontWeight:600,textTransform:"uppercase",letterSpacing:0.8}}>Blockchain ID</p><p style={{fontSize:16,fontWeight:800,color:C.tx,fontFamily:"'JetBrains Mono',monospace",letterSpacing:1}}>{realProfile?.bid||U?.bid||"—"}</p></div><button onClick={()=>sM("otp")} style={{padding:"8px 14px",borderRadius:8,fontSize:11,fontWeight:700,color:"white",background:C.pri,border:"none",cursor:"pointer"}}>Compartir</button></div>
         <div style={{marginTop:12,display:"flex",alignItems:"center",gap:8}}><I.Watch z={14} style={{color:C.pur}}/><span style={{fontSize:12,fontWeight:600,color:C.tx}}>3 dispositivos conectados</span></div>
         <div style={{display:"flex",flexDirection:"column",gap:4,marginTop:8}}>{[{n:"Apple Watch Series 9",s:"Conectado",cl:C.suc},{n:"iPhone 15 Pro",s:"Conectado",cl:C.suc},{n:"Withings Scale",s:"Desconectado",cl:C.tx3}].map((d,i)=><div key={i} style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:6,height:6,borderRadius:3,background:d.cl}}/><span style={{fontSize:11,color:C.tx,flex:1}}>{d.n}</span><span style={{fontSize:10,color:d.cl,fontWeight:600}}>{d.s}</span></div>)}</div>
       </Cd>
     </div>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-      {[{t:"Alergias",ic:I.Warn,it:realProfile?.al||U.al,cl:C.wrn,bg:C.wrnL},{t:"Condiciones",ic:I.Eye,it:realProfile?.co||U.co,cl:C.dan,bg:C.danL},{t:"Vacunas",ic:I.Shield,it:realProfile?.va||U.va,cl:C.suc,bg:C.sucL},{t:"Medicación",ic:I.Pill,it:realProfile?.meds||U.meds,cl:C.pnk,bg:C.pnkL}].map((s,i)=><Cd key={i} style={{padding:"14px 18px"}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}><s.ic z={16} style={{color:s.cl}}/><h3 style={{fontSize:14,fontWeight:700,color:C.tx}}>{s.t}</h3></div><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{s.it.map((x,j)=><span key={j} style={{padding:"4px 12px",borderRadius:8,fontSize:12,background:s.bg,color:s.cl}}>{x}</span>)}</div></Cd>)}
+      {[{t:"Alergias",ic:I.Warn,it:realProfile?.al||U?.al||[],cl:C.wrn,bg:C.wrnL},{t:"Condiciones",ic:I.Eye,it:realProfile?.co||U?.co||[],cl:C.dan,bg:C.danL},{t:"Vacunas",ic:I.Shield,it:realProfile?.va||U?.va||[],cl:C.suc,bg:C.sucL},{t:"Medicación",ic:I.Pill,it:realProfile?.meds||U?.meds||[],cl:C.pnk,bg:C.pnkL}].map((s,i)=><Cd key={i} style={{padding:"14px 18px"}}><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}><s.ic z={16} style={{color:s.cl}}/><h3 style={{fontSize:14,fontWeight:700,color:C.tx}}>{s.t}</h3></div><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{s.it.map((x,j)=><span key={j} style={{padding:"4px 12px",borderRadius:8,fontSize:12,background:s.bg,color:s.cl}}>{x}</span>)}</div></Cd>)}
     </div>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
       {[{l:"Compartir con médico",d:"Código OTP temporal",ic:I.Key,cl:C.pri,act:()=>sM("otp")},{l:"Transferir a hijo/a (18+)",d:"Traspaso completo de historial",ic:I.Transfer,cl:C.pnk},{l:"Añadir familiar",d:"Hijos, padres o hermanos",ic:I.Users,cl:C.pur,act:()=>sM("add")},{l:"Exportar historial",d:"PDF, FHIR o HL7",ic:I.File,cl:C.blu}].map((b,i)=><Cd key={i} style={{padding:"14px 18px",cursor:"pointer"}} onClick={b.act||undefined}><div style={{display:"flex",alignItems:"center",gap:10}}><div style={{width:40,height:40,borderRadius:12,background:C.bg,display:"flex",alignItems:"center",justifyContent:"center"}}><b.ic z={17} style={{color:b.cl}}/></div><div style={{flex:1}}><p style={{fontSize:13,fontWeight:700,color:C.tx}}>{b.l}</p><p style={{fontSize:11,color:C.tx3}}>{b.d}</p></div><I.Chv z={14} style={{color:C.tx3,opacity:0.3}}/></div></Cd>)}
@@ -458,7 +457,7 @@ export default function DesktopApp(){
           </div>
         </>}
         {mod==="add"&&<><h3 style={{fontSize:20,fontWeight:900,color:C.tx,textAlign:"center"}}>Añadir Familiar</h3><p style={{fontSize:12,color:C.tx3,textAlign:"center"}}>La IA analizará patrones hereditarios</p>{[{l:"Hijo/a",d:"Desde recién nacido. Crea su historial desde el día 1.",e:"👶",cl:C.pnk},{l:"Padre/Madre",d:"Datos de padres para patrones hereditarios.",e:"👨‍👩‍👧",cl:C.pur},{l:"Hermano/a",d:"Comparte patrones genéticos.",e:"👫",cl:C.blu}].map((t,i)=><button key={i} style={{borderRadius:14,padding:16,display:"flex",alignItems:"center",gap:12,background:C.bg,border:`1px solid ${C.brd}`,cursor:"pointer",textAlign:"left",width:"100%"}}><span style={{fontSize:28,width:48,height:48,display:"flex",alignItems:"center",justifyContent:"center",borderRadius:14,background:`${t.cl}10`}}>{t.e}</span><div><p style={{fontSize:14,fontWeight:700,color:C.tx}}>{t.l}</p><p style={{fontSize:11,color:C.tx3,marginTop:2}}>{t.d}</p></div></button>)}<div style={{borderRadius:10,padding:12,background:C.sucL,border:`1px solid ${C.sucS}`}}><p style={{fontSize:11,color:C.tx2}}><b style={{color:C.suc}}>Transferencia 18+:</b> Al cumplir 18, transfiere el historial completo a su propia cuenta Ledora AI.</p></div></>}
-        {mod==="otp"&&<><h3 style={{fontSize:20,fontWeight:900,color:C.tx,textAlign:"center"}}>Compartir con Médico</h3><p style={{fontSize:12,color:C.tx3,textAlign:"center"}}>Tu ID: <b style={{fontFamily:"'JetBrains Mono',monospace",color:C.tx}}>{realProfile?.bid||U.bid}</b></p><OTPShare onClose={closeOTP}/><div style={{borderRadius:10,padding:12,background:C.bg}}><p style={{fontSize:11,color:C.tx2,lineHeight:1.5}}>El médico introduce tu <b>Blockchain ID</b> + este <b>código de 6 dígitos</b> para acceder temporalmente a tu historial. El acceso expira automáticamente.</p></div></>}
+        {mod==="otp"&&<><h3 style={{fontSize:20,fontWeight:900,color:C.tx,textAlign:"center"}}>Compartir con Médico</h3><p style={{fontSize:12,color:C.tx3,textAlign:"center"}}>Tu ID: <b style={{fontFamily:"'JetBrains Mono',monospace",color:C.tx}}>{realProfile?.bid||U?.bid||"—"}</b></p><OTPShare onClose={closeOTP}/><div style={{borderRadius:10,padding:12,background:C.bg}}><p style={{fontSize:11,color:C.tx2,lineHeight:1.5}}>El médico introduce tu <b>Blockchain ID</b> + este <b>código de 6 dígitos</b> para acceder temporalmente a tu historial. El acceso expira automáticamente.</p></div></>}
         <button onClick={()=>{sM(null);setUploadType(null)}} style={{width:"100%",padding:8,fontSize:13,color:C.tx3,background:"none",border:"none",cursor:"pointer",fontWeight:600}}>Cerrar</button>
       </div>
     </div>}

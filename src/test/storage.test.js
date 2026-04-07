@@ -21,8 +21,8 @@ describe('Storage Service', () => {
       expect(result.valid).toBe(true)
     })
 
-    it('should reject files over 25MB', () => {
-      const file = { type: 'application/pdf', size: 30 * 1024 * 1024 } // 30MB
+    it('should reject files over 100MB', () => {
+      const file = { type: 'application/pdf', size: 150 * 1024 * 1024 } // 150MB
       const result = validateFile(file)
       expect(result.valid).toBe(false)
       expect(result.error).toBeDefined()

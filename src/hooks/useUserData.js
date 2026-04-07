@@ -6,7 +6,9 @@ import {
   onFamilyMembers,
   onDocuments,
   onInsights,
+  onIntegrations,
 } from "../services/firestore";
+import { onWearableData } from "../services/wearables";
 import { RG } from "../data/referenceRanges";
 import {
   DEMO_PROFILE,
@@ -137,6 +139,8 @@ export function useUserData() {
   const [familyMembers, setFamilyMembers] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [insights, setInsights] = useState([]);
+  const [wearableData, setWearableData] = useState(null);
+  const [integrations, setIntegrations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -146,12 +150,14 @@ export function useUserData() {
       setFamilyMembers([]);
       setDocuments([]);
       setInsights([]);
+      setWearableData(null);
+      setIntegrations([]);
       setLoading(false);
       return;
     }
 
     let loadCount = 0;
-    const total = 5;
+    const total = 7;
     let resolved = false;
     const checkLoaded = () => {
       loadCount++;
@@ -169,6 +175,8 @@ export function useUserData() {
       onFamilyMembers(user.uid, (data) => { setFamilyMembers(data); checkLoaded(); }),
       onDocuments(user.uid, (data) => { setDocuments(data); checkLoaded(); }),
       onInsights(user.uid, (data) => { setInsights(data); checkLoaded(); }),
+      onWearableData(user.uid, (data) => { setWearableData(data); checkLoaded(); }),
+      onIntegrations(user.uid, (data) => { setIntegrations(data); checkLoaded(); }),
     ];
 
     return () => { clearTimeout(timeout); unsubs.forEach(fn => fn()); };
@@ -238,6 +246,8 @@ export function useUserData() {
     insights,
     hereditaryRisks,
     tips,
+    wearableData,
+    integrations,
     loading,
     isEmpty,
     isDemo,

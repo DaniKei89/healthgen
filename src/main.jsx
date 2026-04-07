@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import './i18n' // Initialize i18n before anything else
 import { AuthProvider, useAuth } from './AuthContext.jsx'
+import CookieConsent from './components/CookieConsent.jsx'
 
 // Lazy load heavy components — only loads what's needed
 const App = lazy(() => import('./App.jsx'))
@@ -72,6 +73,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <Root />
+      <CookieConsent />
     </AuthProvider>
   </StrictMode>,
 )

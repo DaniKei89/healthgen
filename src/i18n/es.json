@@ -307,5 +307,16 @@
     "continue": "Continuar",
     "back": "Atrás",
     "stepOf": "Paso {{current}} de {{total}}"
+  },
+  "consent": {
+    "banner": "Usamos cookies para mejorar tu experiencia. Puedes gestionar tus preferencias o aceptar todas las cookies.",
+    "acceptAll": "Aceptar todas",
+    "managePreferences": "Gestionar preferencias",
+    "analytics": "Cookies de analítica",
+    "marketing": "Cookies de marketing",
+    "functional": "Cookies funcionales",
+    "save": "Guardar preferencias",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio"
   }
 }

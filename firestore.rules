@@ -60,6 +60,16 @@ service cloud.firestore {
         allow update: if isOwner(userId);
         allow delete: if isOwner(userId);
       }
+
+      // ═══ INTEGRATIONS (wearable connections) ═══
+      match /integrations/{integrationId} {
+        allow read, create, update, delete: if isOwner(userId);
+      }
+
+      // ═══ WEARABLE DATA ═══
+      match /wearableData/{dataId} {
+        allow read, create, update: if isOwner(userId);
+      }
     }
 
     // ═══ DENY ALL OTHER ACCESS ═══

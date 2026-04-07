@@ -12,12 +12,8 @@ service firebase.storage {
       // Only the file owner can upload, with restrictions
       allow create: if request.auth != null
                     && request.auth.uid == userId
-                    // Max file size: 25MB
-                    && request.resource.size < 25 * 1024 * 1024
-                    // Only allow specific file types
-                    && (request.resource.contentType.matches('application/pdf')
-                        || request.resource.contentType.matches('image/jpeg')
-                        || request.resource.contentType.matches('image/png'));
+                    // Max file size: 100MB
+                    && request.resource.size < 100 * 1024 * 1024;
 
       // Allow delete own files
       allow delete: if request.auth != null && request.auth.uid == userId;

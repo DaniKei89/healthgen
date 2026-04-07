@@ -1,15 +1,24 @@
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "../firebase";
 
-const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
-const ACCEPTED_TYPES = ["application/pdf", "image/jpeg", "image/png"];
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+const ACCEPTED_TYPES = [
+  "application/pdf",
+  "image/jpeg", "image/png", "image/gif", "image/bmp", "image/webp", "image/tiff",
+  "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/dicom", "application/octet-stream",
+  "text/plain",
+];
 
 export function validateFile(file) {
   if (file.size > MAX_FILE_SIZE) {
-    return { valid: false, error: "El archivo supera el límite de 25MB" };
+    return { valid: false, error: `File exceeds the ${MAX_FILE_SIZE / (1024*1024)}MB limit` };
   }
-  if (!ACCEPTED_TYPES.includes(file.type)) {
-    return { valid: false, error: "Solo se aceptan archivos PDF, JPEG y PNG" };
+  // Allow any accepted type, or common medical file extensions
+  const ext = file.name?.split('.').pop()?.toLowerCase();
+  const medicalExts = ['dcm', 'dicom', 'nii', 'nii.gz'];
+  if (!ACCEPTED_TYPES.includes(file.type) && !medicalExts.includes(ext)) {
+    return { valid: false, error: "Unsupported file type. Accepted: PDF, images, Word docs, DICOM" };
   }
   return { valid: true };
 }
