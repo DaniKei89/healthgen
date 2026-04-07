@@ -411,7 +411,7 @@ export default function DesktopApp(){
 
   const pg={d:Dash,f:Fam,e:Evo,a:AiChat,t:TipsView,o:DocView,p:Prof},P=pg[tab]||Dash;
 
-  return (<div style={{minHeight:"100vh",display:"flex",background:`linear-gradient(180deg,${C.bg},${C.bg2})`,fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif"}}>
+  return (<div onDragOver={(e)=>e.preventDefault()} onDrop={(e)=>e.preventDefault()} style={{minHeight:"100vh",display:"flex",background:`linear-gradient(180deg,${C.bg},${C.bg2})`,fontFamily:"'Plus Jakarta Sans',-apple-system,sans-serif"}}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',-apple-system,sans-serif;-webkit-font-smoothing:antialiased}button{outline:none}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:${C.brd};border-radius:3px}::-webkit-scrollbar-thumb:hover{background:${C.brd2}}input::placeholder{color:${C.tx3}}`}</style>
     {/* SIDEBAR */}
     <div style={{width:240,minHeight:"100vh",background:C.card,borderRight:`1px solid ${C.brd}`,display:"flex",flexDirection:"column",position:"fixed",top:0,left:0,zIndex:30}}>
